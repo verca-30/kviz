@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="cs" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>30 s Verčou</title>
+<link rel="icon" href="assets/ikona-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/ikona-180.png">
+<style>
+/* ============================================================
+   30 s Verčou — (c) 2026 KeCl v1.13
+   ============================================================ */
+
+/* === BAREVNÁ SCHÉMATA ==================================== */
+:root {
+  --bg: #fff5fa;
+  --bg2: #f3f0ff;
+  --surface: #ffffff;
+  --surface2: #fdf4ff;
+  --text: #241a2e;
+  --text-muted: #6b5f77;
+  --border: #ecd9f2;
+  --accent: #d6336c;
+  --accent2: #7048e8;
+  --accent-text: #ffffff;
+  --ok: #2b8a3e;
+  --ok-bg: #d3f9d8;
+  --bad: #c92a2a;
+  --bad-bg: #ffe3e3;
+  --shadow: 0 2px 10px rgba(90,40,110,.10);
+  --shadow-lg: 0 14px 40px rgba(90,40,110,.22);
+}
+html[data-theme="dark"] {
+  --bg: #17122a;
+  --bg2: #1f1838;
+  --surface: #241c3f;
+  --surface2: #2d2350;
+  --text: #f4eeff;
+  --text-muted: #b4a6d0;
+  --border: #3a2f5e;
+  --accent: #ff6b9d;
+  --accent2: #b197fc;
+  --accent-text: #1a1330;
+  --ok: #8ce99a;
+  --ok-bg: #1f4d2b;
+  --bad: #ffa8a8;
+  --bad-bg: #5b1f1f;
+  --shadow: 0 2px 10px rgba(0,0,0,.4);
+  --shadow-lg: 0 14px 40px rgba(0,0,0,.55);
+}
+
+/* === ZÁKLAD ============================================== */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: clamp(16px, 1.05vw, 19px);
+  background:
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--accent) 12%, transparent) 0 22%, transparent 45%),
+    radial-gradient(circle at 88% 14%, color-mix(in srgb, var(--accent2) 14%, transparent) 0 20%, transparent 42%),
+    radial-gradient(circle at 70% 92%, color-mix(in srgb, var(--accent) 10%, transparent) 0 18%, transparent 40%),
+    linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  transition: background .25s ease, color .25s ease;
+}
+button { font: inherit; color: inherit; }
+h1, h2, h3 { line-height: 1.15; }
+
+/* === HLAVIČKA ============================================ */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px clamp(12px, 2.5vw, 26px);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.app-header h1 {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  font-size: clamp(1.6rem, 4.4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -.01em;
+  background: linear-gradient(95deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+}
+.h1-dort { width: 1.05em; height: 1.05em; flex: none; }
+.header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.skore-box {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  font-size: .95rem; font-weight: 400;
+}
+.skore-box b { font-weight: 400; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 13px;
+  white-space: nowrap;
+}
+.chip b { color: var(--accent); }
+
+/* === TLAČÍTKA ============================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: .95rem; font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+.btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 3px solid var(--accent2); outline-offset: 2px; }
+.btn-hlavni {
+  background: linear-gradient(95deg, var(--accent), var(--accent2));
+  color: #fff; border-color: transparent;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 40%, transparent);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  padding: 13px 30px;
+}
+/* Druhé tlačítko na závěrečné stránce — stejně velké jako hlavní, jen bez výplně */
+.btn-vedlejsi {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  padding: 13px 30px;
+  border-width: 2px;
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
+.btn-vedlejsi:hover { background: color-mix(in srgb, var(--accent2) 10%, var(--surface)); }
+.btn-ikona { padding: 7px 11px; display: flex; align-items: center; }
+.btn-ikona svg { width: 25px; height: 25px; display: block; }
+/* Tlačítko „Vzdávám to" — ukončí rozehranou hru a skočí na žebříček */
+.btn-vzdat {
+  border-color: var(--border);
+  color: var(--text);
+  font-size: .95rem;
+  font-weight: 800;
+  padding: 6px 15px;
+  gap: 7px;
+}
+.btn-vzdat:hover { color: var(--accent2); border-color: var(--accent2); }
+.btn-vzdat svg { width: 1.05em; height: 1.05em; flex: none; }
+
+/* === THEME TOGGLE ======================================== */
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: .85rem; line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+  user-select: none;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+.theme-toggle:focus-visible { outline: 3px solid var(--accent2); outline-offset: 2px; }
+.theme-toggle-icon { font-size: 1rem; line-height: 1; }
+.theme-toggle-hint { color: var(--text-muted); font-size: .8rem; }
+.theme-toggle[data-mode="day"]   { background: #fff7d6; color: #5a4400; border-color: #e8d27a; }
+.theme-toggle[data-mode="night"] { background: #1d2128; color: #e8eaed; border-color: #3a4150; }
+
+/* === HLAVNÍ OBSAH ======================================== */
+main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
+.scene { display: none; }
+.scene.aktivni { display: block; animation: vstup .45s ease both; }
+@keyframes vstup { from { opacity: 0; transform: translateY(14px);} to { opacity: 1; transform: none; } }
+
+/* === ÚVOD (zadání jména) ================================= */
+.uvod-wrap {
+  max-width: 680px; margin: clamp(10px, 5vh, 60px) auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: clamp(22px, 4vw, 48px);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+.uvod-emoji { font-size: clamp(2.6rem, 9vw, 4.4rem); line-height: 1; margin-bottom: 8px; }
+.uvod-wrap h2 { margin: 0 0 6px; font-size: clamp(1.5rem, 4.4vw, 2.3rem); }
+.uvod-wrap p { color: var(--text-muted); margin: 0 0 22px; font-size: clamp(1rem, 2.2vw, 1.15rem); }
+.pole {
+  width: 100%;
+  font: inherit; font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  text-align: center;
+  padding: 14px 18px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface2);
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.pole:focus { outline: none; border-color: var(--accent); }
+.chyba { color: var(--bad); font-weight: 600; min-height: 1.3em; margin: 0 0 10px; }
+
+/* === MŘÍŽKA OKÉNEK ======================================= */
+.hra-hlavicka { text-align: center; margin-bottom: clamp(12px, 2.5vw, 22px); }
+.hra-hlavicka h2 { margin: 0 0 4px; font-size: clamp(1.15rem, 3vw, 1.7rem); }
+.hra-hlavicka p { margin: 0; color: var(--text-muted); font-size: clamp(.92rem, 2vw, 1.05rem); }
+.mrizka {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(7px, 1.1vw, 15px);
+  max-width: 1500px;
+  margin: 0 auto;
+}
+/* Na širokých displejích se celá deska vejde na jednu obrazovku bez rolování:
+   šířka mřížky je odvozená od dostupné výšky (okénka jsou na šířku 4:3 jako fotky). */
+@media (min-width: 1151px) {
+  .mrizka { --pomer: 4 / 3; max-width: min(1600px, max(700px, calc((100svh - 240px) * 1.6))); }
+}
+@media (min-width: 761px) and (max-width: 1150px) {
+  .mrizka { --pomer: 4 / 3; grid-template-columns: repeat(5, 1fr); max-width: max(560px, calc((100svh - 240px) * 1.11)); }
+}
+@media (max-width: 760px)  { .mrizka { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 380px)  { .mrizka { grid-template-columns: repeat(3, 1fr); } }
+
+.okenko {
+  all: unset;
+  display: block;
+  aspect-ratio: var(--pomer, 1 / 1);
+  cursor: pointer;
+  perspective: 900px;
+  border-radius: 18px;
+}
+.okenko:focus-visible { outline: 3px solid var(--accent2); outline-offset: 3px; }
+.okenko-inner {
+  display: block;
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .6s cubic-bezier(.2,.8,.3,1);
+  border-radius: 18px;
+}
+.okenko.otoceno .okenko-inner { transform: rotateY(180deg); }
+.okenko:hover .okenko-inner { transform: scale(1.04); }
+.okenko.otoceno:hover .okenko-inner { transform: rotateY(180deg) scale(1.04); }
+.face {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.face-front { color: #fff; }
+.face-front .emo {
+  font-size: clamp(1.7rem, 4.6vw, 3rem);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
+  transition: transform .2s ease;
+}
+.okenko:hover .face-front .emo { transform: scale(1.12) rotate(-6deg); }
+/* Víčka = samolepky Verči na lícové straně okének */
+.face-front .vicko {
+  width: 84%; height: 84%;
+  object-fit: contain;
+  display: flex; align-items: center; justify-content: center;
+  filter: drop-shadow(0 3px 7px rgba(0,0,0,.38));
+  transition: transform .2s ease;
+}
+.face-front .vicko-placeholder svg { width: 64%; height: 64%; }
+.okenko:hover .face-front .vicko { transform: scale(1.09) rotate(-3deg); }
+.face-back {
+  transform: rotateY(180deg);
+  background: var(--surface2);
+  border: 2px solid var(--border);
+}
+.face-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.znacka {
+  position: absolute; top: 5px; right: 5px;
+  width: clamp(20px, 3.4vw, 28px); height: clamp(20px, 3.4vw, 28px);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(.7rem, 1.8vw, .95rem); font-weight: 800;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.35);
+}
+.znacka.ok  { background: #2f9e44; }
+.znacka.bad { background: #e03131; }
+
+/* === PŘEKRYVNÁ OKNA (karta, lightbox) ==================== */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(20, 10, 30, .82);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: clamp(10px, 2vw, 26px);
+}
+.overlay.aktivni { display: flex; animation: fadein .25s ease both; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.karta-box {
+  background: var(--surface);
+  border-radius: 24px;
+  width: min(1200px, 100%);
+  max-height: 94svh;
+  overflow: auto;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  animation: vyskoc .3s cubic-bezier(.2,1.2,.4,1) both;
+}
+@keyframes vyskoc { from { opacity: 0; transform: scale(.92) translateY(18px); } to { opacity: 1; transform: none; } }
+.karta-mrizka { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+@media (max-width: 900px) { .karta-mrizka { grid-template-columns: 1fr; } }
+
+.karta-foto {
+  background: linear-gradient(150deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  padding: 14px;
+  border-radius: 24px 0 0 24px;
+  min-height: 200px;
+}
+@media (max-width: 900px) { .karta-foto { border-radius: 24px 24px 0 0; padding: 10px; } }
+.karta-foto img {
+  max-width: 100%;
+  max-height: min(62svh, 560px);
+  border-radius: 14px;
+  cursor: zoom-in;
+  display: block;
+  box-shadow: 0 8px 26px rgba(0,0,0,.3);
+}
+@media (max-width: 900px) {
+  .karta-foto img { max-height: 30svh; }
+  .karta-foto { padding: 8px; min-height: 0; }
+  .karta-kviz { padding: 16px 16px 20px; }
+  .karta-otazka { margin-bottom: 14px; }
+  .odpovedi { gap: 8px; }
+  .odpoved { padding: 11px 13px; }
+  .odpoved .pismeno { width: 30px; height: 30px; }
+}
+
+.karta-kviz { padding: clamp(18px, 2.6vw, 34px); display: flex; flex-direction: column; justify-content: center; }
+.karta-otazka { margin: 0 0 20px; font-size: clamp(1.15rem, 2.3vw, 1.7rem); line-height: 1.3; }
+.odpovedi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 1100px) { .odpovedi { grid-template-columns: 1fr; } }
+.odpoved {
+  text-align: left;
+  color: var(--text);
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: clamp(1rem, 1.9vw, 1.15rem);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 12px;
+  transition: transform .12s ease, border-color .15s ease, background .15s ease;
+}
+.odpoved:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-2px); }
+.odpoved:focus-visible { outline: 3px solid var(--accent2); outline-offset: 2px; }
+.odpoved:disabled { cursor: default; }
+.odpoved .pismeno {
+  flex: 0 0 auto;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+}
+.odpoved.spravne { background: var(--ok-bg); border-color: var(--ok); color: var(--text); }
+.odpoved.spravne .pismeno { background: var(--ok); color: #fff; }
+.odpoved.spatne { background: var(--bad-bg); border-color: var(--bad); color: var(--text); }
+.odpoved.spatne .pismeno { background: var(--bad); color: #fff; }
+.odpoved.tlumene { opacity: .5; }
+
+.vysledek-radek {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  display: none;
+}
+.vysledek-radek.aktivni { display: block; animation: vstup .3s ease both; }
+.vysledek-radek .hlavni { font-weight: 800; font-size: 1.1em; display: block; margin-bottom: 4px; }
+.vysledek-radek.ok .hlavni  { color: var(--ok); }
+.vysledek-radek.bad .hlavni { color: var(--bad); }
+.karta-paticka { margin-top: 18px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+
+.zavrit {
+  position: absolute; top: 10px; right: 12px;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,.45);
+  color: #fff;
+  font-size: 1.4rem; line-height: 1;
+  cursor: pointer;
+  z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+}
+.zavrit:hover { background: rgba(0,0,0,.7); }
+.zavrit:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+#lightbox img {
+  max-width: 96vw; max-height: 90svh;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  cursor: zoom-out;
+}
+
+/* === ZÁVĚREČNÁ OBRAZOVKA ================================= */
+.konec-wrap { max-width: 900px; margin: 0 auto; }
+.konec-karta {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: clamp(20px, 3.5vw, 44px);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  margin-bottom: 22px;
+}
+.konec-karta h2 { margin: 0 0 10px; font-size: clamp(1.6rem, 5vw, 2.6rem); }
+.velke-skore {
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-weight: 900; line-height: 1;
+  background: linear-gradient(95deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin: 10px 0 4px;
+}
+.konec-karta .hodnoceni { font-size: clamp(1.05rem, 2.4vw, 1.3rem); color: var(--text-muted); margin: 0 0 18px; }
+.konec-akce { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+.tabulka-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: clamp(16px, 3vw, 32px);
+  box-shadow: var(--shadow);
+  margin-bottom: 22px;
+}
+.tabulka-box h3 { margin: 0 0 14px; font-size: clamp(1.2rem, 3vw, 1.6rem); text-align: center; }
+.zebricek { width: 100%; border-collapse: collapse; font-size: clamp(.95rem, 2vw, 1.1rem); }
+.zebricek th, .zebricek td { padding: 11px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.zebricek th { color: var(--text-muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; }
+.zebricek td.poradi { width: 56px; font-weight: 800; color: var(--text-muted); }
+.zebricek td.body { text-align: right; font-weight: 800; color: var(--accent); white-space: nowrap; }
+.zebricek td.kdy { text-align: right; color: var(--text-muted); font-size: .85em; white-space: nowrap; }
+@media (max-width: 560px) { .zebricek td.kdy, .zebricek th.kdy { display: none; } }
+.zebricek tr.ja td { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.zebricek tr.ja td:first-child { border-radius: 10px 0 0 10px; }
+.zebricek tr.ja td:last-child  { border-radius: 0 10px 10px 0; }
+.medaile { font-size: 1.15em; }
+.prazdno { text-align: center; color: var(--text-muted); padding: 18px; }
+
+.sprava {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .9rem;
+  padding-bottom: 20px;
+}
+.sprava .reset-form { display: none; justify-content: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.sprava .reset-form.aktivni { display: flex; }
+.sprava input {
+  font: inherit; padding: 9px 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  max-width: 220px;
+}
+.odkaz-tlacitko {
+  background: none; border: none; color: var(--text-muted);
+  text-decoration: underline; cursor: pointer; font-size: .9rem; padding: 4px;
+}
+.odkaz-tlacitko:hover { color: var(--accent); }
+
+/* === ZÁPATÍ ============================================== */
+.app-footer {
+  padding: 12px 24px;
+  text-align: center;
+  font-size: .8rem;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border-top: 1px solid var(--border);
+}
+
+/* === KONFETY ============================================= */
+#konfety { position: fixed; inset: 0; pointer-events: none; z-index: 200; display: none; }
+#konfety.aktivni { display: block; }
+
+/* === PŘÍSTUPNOST ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1><svg class="h1-dort" viewBox="0 0 24 24" aria-hidden="true">
+      <defs><linearGradient id="dortGrad" x1="0" y1="0.4" x2="1" y2="0.6">
+        <stop offset="0" stop-color="#d6336c" style="stop-color:var(--accent)"/>
+        <stop offset="1" stop-color="#7048e8" style="stop-color:var(--accent2)"/>
+      </linearGradient></defs>
+      <g fill="url(#dortGrad)">
+        <path d="M12 2.2c1.35 1.5 2.05 2.35 2.05 3.3a2.05 2.05 0 0 1-4.1 0c0-.95.7-1.8 2.05-3.3z"/>
+        <rect x="11.2" y="6.6" width="1.6" height="4.2" rx=".8"/>
+        <path d="M4.6 15.1V12.8a1.65 1.65 0 0 1 1.65-1.65h11.5a1.65 1.65 0 0 1 1.65 1.65v2.3c-.925 0-.925-.85-1.85-.85s-.925.85-1.85.85-.925-.85-1.85-.85-.925.85-1.85.85-.925-.85-1.85-.85-.925.85-1.85.85-.925-.85-1.85-.85-.925.85-1.85.85z"/>
+        <path d="M4.6 16.1c.925 0 .925.85 1.85.85s.925-.85 1.85-.85.925.85 1.85.85.925-.85 1.85-.85.925.85 1.85.85.925-.85 1.85-.85.925.85 1.85.85.925-.85 1.85-.85V19.2H4.6z"/>
+        <rect x="2.6" y="19.6" width="18.8" height="2.2" rx="1.1"/>
+      </g>
+    </svg><span>30 s Verčou</span></h1>
+  <div class="header-actions">
+    <button class="btn btn-vzdat" id="vzdatBtn" type="button" title="Ukončit hru a zobrazit žebříček" style="display:none"></button>
+    <button class="btn btn-vzdat" id="zebricekBtn" type="button" title="Zpět na žebříček" style="display:none">🏅 Žebříček</button>
+    <div class="skore-box" id="skoreBox" style="display:none">
+      <span class="chip">Otevřeno <b><span id="pocetOtevrenych">0</span>/30</b></span>
+      <span class="chip">Body <b><span id="pocetBodu">0</span></b></span>
+    </div>
+    <button class="btn btn-ikona" id="hudbaBtn" type="button" title="Vypnout hudbu" aria-label="Vypnout hudbu" style="display:none"></button>
+    <button class="theme-toggle" id="themeToggle" type="button" data-mode="auto"
+            aria-label="Přepnout režim zobrazení" title="Klikni pro přepnutí režimu (Auto → Den → Noc)">
+      <span class="theme-toggle-icon" id="themeIcon" aria-hidden="true">◐</span>
+      <span class="theme-toggle-label" id="themeLabel">Auto</span>
+      <span class="theme-toggle-hint" id="themeHint" style="display:none"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== ÚVOD ===== -->
+  <section class="scene aktivni" id="sceneUvod">
+    <div class="uvod-wrap">
+      <div class="uvod-emoji">🎉🎂🎈</div>
+      <h2>Kdo to k nám sem přišel?</h2>
+      <p>Napiš svoje jméno nebo přezdívku a pustíme se do hry.</p>
+      <form id="jmenoForm" autocomplete="off">
+        <input class="pole" id="jmenoInput" type="text" maxlength="24" placeholder="Tvoje jméno…"
+               aria-label="Tvoje jméno" autocomplete="off">
+        <p class="chyba" id="jmenoChyba" role="alert"></p>
+        <button class="btn btn-hlavni" type="submit">Jdeme na to! 🎈</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== HRA ===== -->
+  <section class="scene" id="sceneHra">
+    <div class="hra-hlavicka">
+      <h2 id="pozdrav">Vítej!</h2>
+    </div>
+    <div class="mrizka" id="mrizka"></div>
+  </section>
+
+  <!-- ===== ZÁVĚR ===== -->
+  <section class="scene" id="sceneKonec">
+    <div class="konec-wrap">
+      <div class="konec-karta">
+        <div class="uvod-emoji" id="konecIkona">🏆</div>
+        <h2 id="konecJmeno">Hotovo!</h2>
+        <div class="velke-skore" id="konecSkore"><span id="konecBody">0</span>/30</div>
+        <p class="hodnoceni" id="konecHodnoceni"></p>
+        <div class="konec-akce">
+          <button class="btn btn-vedlejsi" id="zpetNaMrizku" type="button">🖼️ Prohlédnout fotky</button>
+          <button class="btn btn-hlavni" id="hratZnovu" type="button">🔄 Zahrát znovu (jiný hráč)</button>
+        </div>
+      </div>
+
+      <div class="tabulka-box">
+        <h3>🏅 Jak znají Verču</h3>
+        <table class="zebricek">
+          <thead>
+            <tr><th>#</th><th>Hráč</th><th style="text-align:right">Body</th><th class="kdy" style="text-align:right">Kdy</th></tr>
+          </thead>
+          <tbody id="zebricekBody">
+            <tr><td colspan="4" class="prazdno">Načítám…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sprava">
+        <div>Tuhle stránku navštívilo už <b id="pocitadlo">…</b> lidí.</div>
+        <button class="odkaz-tlacitko" id="resetToggle" type="button">reset žebříčku</button>
+        <form class="reset-form" id="resetForm" autocomplete="off">
+          <input type="password" id="resetHeslo" placeholder="heslo" aria-label="Heslo pro reset">
+          <button class="btn" type="submit">Smazat žebříček</button>
+        </form>
+        <p id="resetZprava" style="min-height:1.2em;margin:8px 0 0"></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">(c) 2026 KeCl v1.13</footer>
+
+<!-- ===== KARTA S OTÁZKOU ===== -->
+<div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
+  <div class="karta-box">
+    <button class="zavrit" id="kartaZavrit" type="button" aria-label="Zavřít">✕</button>
+    <div class="karta-mrizka">
+      <div class="karta-foto">
+        <img id="kartaFoto" alt="Fotka Verči" title="Klikni pro zvětšení">
+      </div>
+      <div class="karta-kviz">
+        <h3 class="karta-otazka" id="kartaOtazka"></h3>
+        <div class="odpovedi" id="kartaOdpovedi"></div>
+        <div class="vysledek-radek" id="kartaVysledek"></div>
+        <div class="karta-paticka">
+          <button class="btn btn-hlavni" id="kartaPokracovat" type="button" style="display:none">Pokračovat ▸</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LIGHTBOX ===== -->
+<div class="overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Zvětšená fotka">
+  <button class="zavrit" id="lightboxZavrit" type="button" aria-label="Zavřít">✕</button>
+  <img id="lightboxFoto" alt="Zvětšená fotka">
+</div>
+
+<canvas id="konfety"></canvas>
+<audio id="hudba" loop preload="auto"></audio>
+<script src="assets/hudba-data.js" defer></script>
+
+<script>
+/* ============================================================
+   30 s Verčou — (c) 2026 KeCl v1.13
+   ============================================================ */
+
+/* ============================================================
+   ▼▼▼  NASTAVENÍ  ▼▼▼
+   ============================================================ */
+const CONFIG = {
+  APP_VERSION: 'v1.13',
+  oslavenkyne: 'Verča',
+  // skloňování do hlášek: koho/co, s kým, o kom
+  oslavenkyneKoho: 'Verču',
+  oslavenkyneSKym: 'Verčou',
+
+  // Složka s fotkami (relativně k tomuto souboru)
+  fotoSlozka: 'assets/fotky/',
+
+  // Složka s víčky = samolepkami Verči na lícové straně okének
+  vickaSlozka: 'assets/vicka/',
+
+  // Podkladová hudba (nech prázdné, dokud soubor nemáš)
+  hudba: 'assets/hudba.mp3',
+
+  // Bezešvější varianta téže smyčky pro prohlížeče, které umí Ogg Vorbis
+  // (Chrome, Firefox) — MP3 má na začátku a konci krátké ticho od kodéru.
+  hudbaOgg: 'assets/hudba.ogg',
+
+  // Přesná délka smyčky v sekundách (podle připraveného souboru) — používá
+  // se pro bezešvé opakování přes Web Audio.
+  delkaSmycky: 52.369524,
+  hlasitost: 0.20,
+
+  // Heslo pro reset žebříčku (uloženo jako hash, viz funkce hashText)
+  resetHash: 667534615,
+
+  // Počítadlo návštěv (zdarma, bez registrace)
+  pocitadloURL: 'https://abacus.jasoncameron.dev/hit/verca30-kecl/navstevy',
+
+  // SPOLEČNÝ ŽEBŘÍČEK PRO VŠECHNY NÁVŠTĚVNÍKY (Firebase Realtime Database).
+  // Každý výsledek se přidává samostatným POSTem, takže se dva hráči, kteří
+  // dohrají ve stejnou chvíli, nemohou navzájem přepsat. Když je adresa prázdná
+  // nebo síť selže, žebříček spadne zpět na lokální uložení v prohlížeči.
+  zebricekURL: 'https://verca30-default-rtdb.europe-west1.firebasedatabase.app/zebricek.json'
+};
+
+/* ============================================================
+   ▼▼▼  OBSAH — 30 FOTEK A 30 OTÁZEK  ▼▼▼
+
+   Každý záznam:
+     foto     – název souboru ve složce assets/fotky/
+     otazka   – znění otázky
+     moznosti – přesně 4 možnosti
+     spravne  – index správné možnosti (0 = první, 1 = druhá, 2 = třetí, 3 = čtvrtá)
+     komentar – (nepovinné) věta, která se ukáže po odpovědi
+   ============================================================ */
+const OTAZKY = [
+  { foto:'01.jpg', otazka:'Co má Verunka na krku?', moznosti:['mateřské znamínko','dalekohled','krasohled','dalekopohled'], spravne:3, komentar:'Jasně že dalekopohled, tak tomu Verča vždycky říkala 😄' },
+  { foto:'02.jpg', otazka:'Ve které zemi byla Verča tentokrát?', moznosti:['Borneo','Šrí Lanka','Mauricius','Austrálie'], spravne:3, komentar:'No jasně, to je přece letošní fotka ze země klokanů 🦘' },
+  { foto:'03.jpg', otazka:'Otázka č. 3 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'04.jpg', otazka:'Otázka č. 4 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'05.jpg', otazka:'Otázka č. 5 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'06.jpg', otazka:'Otázka č. 6 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'07.jpg', otazka:'Otázka č. 7 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'08.jpg', otazka:'Otázka č. 8 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'09.jpg', otazka:'Otázka č. 9 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'10.jpg', otazka:'Otázka č. 10 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'11.jpg', otazka:'Otázka č. 11 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'12.jpg', otazka:'Otázka č. 12 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'13.jpg', otazka:'Otázka č. 13 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'14.jpg', otazka:'Otázka č. 14 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'15.jpg', otazka:'Otázka č. 15 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'16.jpg', otazka:'Otázka č. 16 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'17.jpg', otazka:'Otázka č. 17 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'18.jpg', otazka:'Otázka č. 18 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'19.jpg', otazka:'Otázka č. 19 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'20.jpg', otazka:'Otázka č. 20 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'21.jpg', otazka:'Otázka č. 21 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'22.jpg', otazka:'Otázka č. 22 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'23.jpg', otazka:'Otázka č. 23 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'24.jpg', otazka:'Otázka č. 24 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'25.jpg', otazka:'Otázka č. 25 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'26.jpg', otazka:'Otázka č. 26 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'27.jpg', otazka:'Otázka č. 27 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'28.jpg', otazka:'Otázka č. 28 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'29.jpg', otazka:'Otázka č. 29 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'30.jpg', otazka:'Otázka č. 30 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' }
+];
+
+/* Emoji na rubu okének (30 různých) */
+const EMOJI = ['🎂','🎈','🎁','🎉','🥳','🍰','🎊','✨','🎀','🍾','🥂','💐','🌟','💖','🎵','🧁','🎯','🍭','🌈','🦄','💃','📸','🕯️','🎪','🍀','😍','🔥','👑','🎠','🌸'];
+
+/* Víčka — samolepky Verči (průhledné PNG) na lícové straně okének.
+   Leží v assets/vicka/. Až přibydou další, stačí je sem dopsat;
+   kde víčko chybí, ukáže se neutrální placeholder. */
+const VICKA = ['01.png','02.png','03.png','04.png','05.png','06.png','07.png','08.png',
+                '09.png','10.png','11.png','12.png','13.png','14.png','15.png',
+                '16.png','17.png','18.png','19.png','20.png','21.png','22.png',
+                '23.png','24.png','25.png','26.png','27.png','28.png',
+                '29.png','30.png'];
+
+/* Barevné gradienty okének */
+const GRADIENTY = [
+  'linear-gradient(140deg,#ff6b9d,#c44569)', 'linear-gradient(140deg,#f8b500,#fc8d3e)',
+  'linear-gradient(140deg,#4facfe,#00f2fe)', 'linear-gradient(140deg,#43e97b,#38f9d7)',
+  'linear-gradient(140deg,#a55eea,#8854d0)', 'linear-gradient(140deg,#ff9a9e,#fad0c4)',
+  'linear-gradient(140deg,#30cfd0,#330867)', 'linear-gradient(140deg,#ff758c,#ff7eb3)',
+  'linear-gradient(140deg,#fbc2eb,#a18cd1)', 'linear-gradient(140deg,#f6d365,#fda085)',
+  'linear-gradient(140deg,#5ee7df,#b490ca)', 'linear-gradient(140deg,#c471f5,#fa71cd)',
+  'linear-gradient(140deg,#48c6ef,#6f86d6)', 'linear-gradient(140deg,#feada6,#f5efef)',
+  'linear-gradient(140deg,#e17055,#fdcb6e)'
+];
+
+/* ============================================================
+   POMOCNÉ FUNKCE
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+
+function hashText(s) {
+  let h = 5381;
+  for (const c of String(s)) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0;
+  return h;
+}
+
+function zamichej(pole) {
+  const a = pole.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+/* Náhodné rozmístění víček po mřížce; kde víčko není, je null */
+function rozmistiVicka() {
+  const pole = VICKA.slice(0, OTAZKY.length);
+  while (pole.length < OTAZKY.length) pole.push(null);
+  return zamichej(pole);
+}
+
+/* Neutrální placeholder pro okénka, ke kterým zatím víčko není */
+function placeholderVicko() {
+  const s = document.createElement('span');
+  s.className = 'vicko vicko-placeholder';
+  s.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true">'
+    + '<circle cx="50" cy="50" r="46" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.5)" stroke-width="3" stroke-dasharray="7 6"/>'
+    + '<circle cx="50" cy="40" r="14" fill="rgba(255,255,255,.72)"/>'
+    + '<path d="M23 77c0-14.5 12-23 27-23s27 8.5 27 23z" fill="rgba(255,255,255,.72)"/>'
+    + '</svg>';
+  return s;
+}
+
+/* Náhradní obrázek, dokud nejsou nahrané skutečné fotky */
+function nahradniFoto(poradi, emoji) {
+  const g = ['#ff6b9d','#f8b500','#4facfe','#43e97b','#a55eea','#30cfd0'][poradi % 6];
+  const q = OTAZKY[poradi];
+  const cesta = q ? CONFIG.fotoSlozka + q.foto : '?';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+    <rect width="800" height="600" fill="${g}"/>
+    <text x="400" y="250" font-size="140" text-anchor="middle" dominant-baseline="middle">${emoji}</text>
+    <text x="400" y="380" font-size="38" fill="#ffffff" font-family="sans-serif" text-anchor="middle">chybí soubor</text>
+    <text x="400" y="440" font-size="34" fill="#ffffff" font-family="monospace" text-anchor="middle">${cesta}</text>
+  </svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+/* ============================================================
+   STAV HRY  (drží se v sessionStorage — přežije refresh v témže okně)
+   ============================================================ */
+const KLIC_STAV = 'verca30-stav';
+const KLIC_ZEBRICEK = 'verca30-zebricek';
+
+let stav = null;
+
+function novyStav(jmeno) {
+  return {
+    jmeno: jmeno,
+    poradi: zamichej(OTAZKY.map((_, i) => i)),
+    emoji: zamichej(EMOJI),
+    vicka: rozmistiVicka(),
+    odpovedi: {},          // index otázky -> zvolená možnost
+    body: 0,
+    hotovo: false,
+    zapsano: false,
+    zacatek: Date.now()
+  };
+}
+
+function ulozStav() {
+  try { sessionStorage.setItem(KLIC_STAV, JSON.stringify(stav)); } catch (e) {}
+}
+
+function nactiStav() {
+  try {
+    const raw = sessionStorage.getItem(KLIC_STAV);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (!s || !s.jmeno || !Array.isArray(s.poradi) || s.poradi.length !== OTAZKY.length) return null;
+    if (!Array.isArray(s.vicka) || s.vicka.length !== OTAZKY.length) s.vicka = rozmistiVicka();
+    return s;
+  } catch (e) { return null; }
+}
+
+function pocetZodpovezenych() { return Object.keys(stav.odpovedi).length; }
+
+/* ============================================================
+   OBRAZOVKY
+   ============================================================ */
+function scena(jmeno) {
+  ['sceneUvod', 'sceneHra', 'sceneKonec'].forEach(id => {
+    $(id).classList.toggle('aktivni', id === jmeno);
+  });
+  // Po dohrané hře se dá z prohlížení fotek vrátit na žebříček
+  $('zebricekBtn').style.display = (jmeno === 'sceneHra' && stav && stav.hotovo) ? '' : 'none';
+  requestAnimationFrame(srovnejHlavicku);
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+/* ============================================================
+   MŘÍŽKA
+   ============================================================ */
+function vykresliMrizku() {
+  const mrizka = $('mrizka');
+  mrizka.innerHTML = '';
+
+  stav.poradi.forEach((idx, pozice) => {
+    const q = OTAZKY[idx];
+    const emoji = stav.emoji[pozice % stav.emoji.length];
+    const zodpovezeno = Object.prototype.hasOwnProperty.call(stav.odpovedi, idx);
+    const spravne = zodpovezeno && stav.odpovedi[idx] === q.spravne;
+
+    const btn = document.createElement('button');
+    btn.className = 'okenko' + (zodpovezeno ? ' otoceno' : '');
+    btn.type = 'button';
+    btn.dataset.idx = idx;
+    btn.dataset.pozice = pozice;
+    btn.setAttribute('aria-label', zodpovezeno ? 'Zodpovězené okénko – zobrazit fotku' : 'Neotevřené okénko');
+
+    const inner = document.createElement('span');
+    inner.className = 'okenko-inner';
+
+    const front = document.createElement('span');
+    front.className = 'face face-front';
+    front.style.background = GRADIENTY[pozice % GRADIENTY.length];
+    const vicko = (stav.vicka && stav.vicka[pozice]) || null;
+    if (vicko) {
+      const v = document.createElement('img');
+      v.className = 'vicko';
+      v.loading = 'lazy';
+      v.alt = '';
+      v.src = CONFIG.vickaSlozka + vicko;
+      v.addEventListener('error', () => { v.replaceWith(placeholderVicko()); }, { once: true });
+      front.appendChild(v);
+    } else {
+      front.appendChild(placeholderVicko());
+    }
+
+    const back = document.createElement('span');
+    back.className = 'face face-back';
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.alt = '';
+    img.src = CONFIG.fotoSlozka + q.foto;
+    img.addEventListener('error', () => { img.src = nahradniFoto(idx, emoji); }, { once: true });
+    back.appendChild(img);
+    if (zodpovezeno) {
+      const zn = document.createElement('span');
+      zn.className = 'znacka ' + (spravne ? 'ok' : 'bad');
+      zn.textContent = spravne ? '✓' : '✕';
+      back.appendChild(zn);
+    }
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    btn.appendChild(inner);
+    btn.addEventListener('click', () => klikNaOkenko(idx, pozice));
+    mrizka.appendChild(btn);
+  });
+
+  aktualizujSkore();
+  requestAnimationFrame(srovnejHlavicku);
+}
+
+/* Nadpis v záhlaví zarovnáme s levým krajem mřížky (a akce s pravým). */
+function srovnejHlavicku() {
+  const hd = document.querySelector('.app-header');
+  const sc = document.querySelector('.scene.aktivni');
+  if (!hd || !sc) return;
+  const el = sc.querySelector('.mrizka, .konec-wrap, .uvod-wrap') || sc;
+  const r = el.getBoundingClientRect();
+  if (r.width < 10) return;               // scéna zrovna není vidět
+  const pad = Math.max(12, Math.round(r.left));
+  hd.style.paddingLeft = pad + 'px';
+  hd.style.paddingRight = pad + 'px';
+}
+window.addEventListener('resize', srovnejHlavicku);
+
+let vzdatKlik = 0;
+
+function aktualizujSkore() {
+  $('pocetOtevrenych').textContent = pocetZodpovezenych();
+  $('pocetBodu').textContent = stav.body;
+  $('skoreBox').style.display = '';
+  $('vzdatBtn').style.display = stav.hotovo ? 'none' : '';
+  $('zebricekBtn').style.display = stav.hotovo ? '' : 'none';
+}
+
+function klikNaOkenko(idx, pozice) {
+  const zodpovezeno = Object.prototype.hasOwnProperty.call(stav.odpovedi, idx);
+  const emoji = stav.emoji[pozice % stav.emoji.length];
+  if (zodpovezeno) {
+    otevriLightbox(CONFIG.fotoSlozka + OTAZKY[idx].foto, idx, emoji);
+  } else {
+    otevriKartu(idx, pozice);
+  }
+}
+
+/* ============================================================
+   KARTA S OTÁZKOU
+   ============================================================ */
+let aktualniIdx = null;
+
+function otevriKartu(idx, pozice) {
+  aktualniIdx = idx;
+  const q = OTAZKY[idx];
+  const emoji = stav.emoji[pozice % stav.emoji.length];
+
+  const foto = $('kartaFoto');
+  foto.src = CONFIG.fotoSlozka + q.foto;
+  foto.onerror = () => { foto.onerror = null; foto.src = nahradniFoto(idx, emoji); };
+  foto.onclick = () => otevriLightbox(foto.src, idx, emoji);
+
+  $('kartaOtazka').textContent = q.otazka;
+
+  const box = $('kartaOdpovedi');
+  box.innerHTML = '';
+  const pismena = ['A', 'B', 'C', 'D'];
+  q.moznosti.forEach((m, i) => {
+    const b = document.createElement('button');
+    b.className = 'odpoved';
+    b.type = 'button';
+    b.innerHTML = '<span class="pismeno">' + pismena[i] + '</span><span>' + escapeHtml(m) + '</span>';
+    b.addEventListener('click', () => odpovez(idx, i));
+    box.appendChild(b);
+  });
+
+  const vys = $('kartaVysledek');
+  vys.className = 'vysledek-radek';
+  vys.innerHTML = '';
+  $('kartaPokracovat').style.display = 'none';
+  $('kartaZavrit').style.display = '';
+
+  $('karta').classList.add('aktivni');
+  document.body.style.overflow = 'hidden';
+}
+
+function zavriKartu() {
+  $('karta').classList.remove('aktivni');
+  document.body.style.overflow = '';
+  aktualniIdx = null;
+}
+
+function odpovez(idx, volba) {
+  if (Object.prototype.hasOwnProperty.call(stav.odpovedi, idx)) return;
+  const q = OTAZKY[idx];
+  const spravne = volba === q.spravne;
+
+  stav.odpovedi[idx] = volba;
+  if (spravne) stav.body++;
+  ulozStav();
+
+  // Označí se pouze zvolená možnost — správná odpověď se neprozrazuje,
+  // aby mělo smysl hrát znovu a zlepšovat si skóre.
+  const tlacitka = $('kartaOdpovedi').querySelectorAll('.odpoved');
+  tlacitka.forEach((b, i) => {
+    b.disabled = true;
+    if (i === volba) b.classList.add(spravne ? 'spravne' : 'spatne');
+    else b.classList.add('tlumene');
+  });
+
+  const vys = $('kartaVysledek');
+  vys.className = 'vysledek-radek aktivni ' + (spravne ? 'ok' : 'bad');
+  const hlavicka = spravne ? '✅ Správně! +1 bod' : '❌ Tentokrát ne…';
+  // Komentář se ukazuje jen po správné odpovědi.
+  vys.innerHTML = '<span class="hlavni">' + hlavicka + '</span>' +
+                  (spravne && q.komentar ? escapeHtml(q.komentar) : '');
+
+  $('kartaPokracovat').style.display = '';
+  $('kartaPokracovat').focus();
+  try { vys.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
+
+  // otočit okénko v mřížce
+  const btn = $('mrizka').querySelector('.okenko[data-idx="' + idx + '"]');
+  if (btn) {
+    btn.classList.add('otoceno');
+    btn.setAttribute('aria-label', 'Zodpovězené okénko – zobrazit fotku');
+    const back = btn.querySelector('.face-back');
+    if (back && !back.querySelector('.znacka')) {
+      const zn = document.createElement('span');
+      zn.className = 'znacka ' + (spravne ? 'ok' : 'bad');
+      zn.textContent = spravne ? '✓' : '✕';
+      back.appendChild(zn);
+    }
+  }
+  aktualizujSkore();
+}
+
+function pokracovat() {
+  zavriKartu();
+  if (pocetZodpovezenych() >= OTAZKY.length) {
+    dokoncit();
+  }
+}
+
+/* ============================================================
+   LIGHTBOX
+   ============================================================ */
+function otevriLightbox(src, idx, emoji) {
+  const img = $('lightboxFoto');
+  img.onerror = () => { img.onerror = null; img.src = nahradniFoto(idx || 0, emoji || '🎂'); };
+  img.src = src;
+  $('lightbox').classList.add('aktivni');
+  document.body.style.overflow = 'hidden';
+}
+
+function zavriLightbox() {
+  $('lightbox').classList.remove('aktivni');
+  if (!$('karta').classList.contains('aktivni')) document.body.style.overflow = '';
+}
+
+/* ============================================================
+   ZÁVĚR + ŽEBŘÍČEK
+   ============================================================ */
+/* Hlášky pro 11. místo a dál — vybírá se náhodně. Klidně si je přepiš. */
+const HLASKY_DALE = [
+  '🫧 Body nejsou všechno — hlavní je, že jsi tu dnes s ' + CONFIG.oslavenkyneSKym + '.',
+  '📚 Tohle chce ještě jeden společný večer, příště to bude lepší.',
+  '🧠 Paměť je zrádná věc. Srdce ale ví svoje.',
+  '🐢 Pomalu, ale jistě. Do desítky se příště doplazíš.',
+  '🎯 Uhodnout ' + CONFIG.oslavenkyneKoho + ' není jen tak — klobouk dolů za pokus!',
+  '🍰 Za účast dort, za vědomosti až příště.',
+  '🙃 Žebříček je jen číslo. Dárek snad zaboduje víc.',
+  '🔍 Detektivem roku to nebude, ale zábava to byla.',
+  '🎲 Kdyby se body dávaly za nadšení, bereš zlato.',
+  '🌱 Každý mistr začínal takhle. Za rok pozor!',
+  '🎈 ' + CONFIG.oslavenkyne + ' tě má ráda i s tímhle skóre.',
+  '⏳ Třicet let se prostě nenastuduje za pět minut.'
+];
+
+function hlaskaPodlePoradi(poradi, body, celkem) {
+  let t;
+  if (poradi === 1)      t = '🥇 VÍTĚZSTVÍ! Nikdo zatím nezná ' + CONFIG.oslavenkyneKoho + ' líp než ty. Smekáme!';
+  else if (poradi === 2) t = '🥈 Stříbro! O fous za vítězem a vysoko nad všemi ostatními.';
+  else if (poradi === 3) t = '🥉 Bronz! Bedna je bedna — gratulujeme!';
+  else if (poradi <= 5)  t = '🏅 ' + poradi + '. místo — bedna utekla jen o kousek. Skvělý výsledek!';
+  else if (poradi <= 10) t = '💪 ' + poradi + '. místo, tedy krásná top desítka. Pěkná práce!';
+  else if (poradi > 10)  t = HLASKY_DALE[Math.floor(Math.random() * HLASKY_DALE.length)];
+  else                   t = '🎉 Hotovo! Výsledek je zapsaný v žebříčku.';
+  if (body === celkem) t += ' A k tomu plný počet bodů!';
+  return t;
+}
+
+async function dokoncit(vzdal) {
+  // vzdal = hráč skončil předčasně tlačítkem „Vzdávám to" — hra se uzavře
+  // a výsledek jde do žebříčku stejně, ale bez konfet (není co slavit).
+  stav.hotovo = true;
+  ulozStav();
+  $('vzdatBtn').style.display = 'none';
+
+  // Do žebříčku se počítají jen hry se všemi zodpovězenými otázkami.
+  const kompletni = pocetZodpovezenych() === OTAZKY.length;
+
+  $('konecIkona').textContent = vzdal ? '🏳️' : '🏆';
+  $('konecJmeno').textContent = stav.jmeno + (vzdal ? ', tak zase někdy příště!' : ', máš hotovo!');
+  $('konecBody').textContent = stav.body;
+  // Po vzdání body neukazujeme — do žebříčku se stejně nepočítají.
+  $('konecSkore').style.display = vzdal ? 'none' : '';
+  $('konecHodnoceni').textContent = '';
+
+  scena('sceneKonec');
+  if (!vzdal) konfety(7000);
+
+  let mujZaznam = null;
+  if (kompletni && !stav.zapsano) {
+    stav.zapsano = true;
+    ulozStav();
+    mujZaznam = {
+      id: 'z' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+      jmeno: stav.jmeno,
+      body: stav.body,
+      celkem: OTAZKY.length,
+      kdy: new Date().toISOString()
+    };
+    await zapisVysledek(mujZaznam);
+  }
+  const poradi = await vykresliZebricek(mujZaznam);
+  if (kompletni) {
+    $('konecHodnoceni').textContent = hlaskaPodlePoradi(poradi, stav.body, OTAZKY.length);
+    if (poradi === 1 && !vzdal) konfety(12000);
+  }
+}
+
+function lokalniZebricek() {
+  try {
+    const raw = localStorage.getItem(KLIC_ZEBRICEK);
+    const d = raw ? JSON.parse(raw) : [];
+    return Array.isArray(d) ? d : [];
+  } catch (e) { return []; }
+}
+
+function ulozLokalne(pole) {
+  try { localStorage.setItem(KLIC_ZEBRICEK, JSON.stringify(pole)); } catch (e) {}
+}
+
+async function vzdalenyZebricek() {
+  if (!CONFIG.zebricekURL) return null;
+  try {
+    const r = await fetch(CONFIG.zebricekURL, { cache: 'no-store' });
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (d === null || d === undefined) return [];          // prázdná databáze
+    if (Array.isArray(d)) return d.filter(Boolean);
+    if (Array.isArray(d.zaznamy)) return d.zaznamy;
+    return Object.values(d).filter(z => z && z.jmeno != null);  // objekt klíč→záznam
+  } catch (e) { return null; }
+}
+
+async function zapisVzdalene(zaznam) {
+  if (!CONFIG.zebricekURL) return false;
+  try {
+    const r = await fetch(CONFIG.zebricekURL, {
+      method: 'POST',                       // přidá záznam pod vlastní klíč
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(zaznam)
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+async function smazVzdalene() {
+  if (!CONFIG.zebricekURL) return false;
+  try {
+    const r = await fetch(CONFIG.zebricekURL, { method: 'DELETE' });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+function slucZaznamy(a, b) {
+  const mapa = new Map();
+  [...(a || []), ...(b || [])].forEach(z => {
+    if (z && z.jmeno != null && z.id) mapa.set(z.id, z);
+  });
+  return [...mapa.values()];
+}
+
+async function zapisVysledek(zaznam) {
+  const lok = lokalniZebricek();
+  lok.push(zaznam);
+  ulozLokalne(lok);
+
+  await zapisVzdalene(zaznam);
+}
+
+async function vykresliZebricek(mujZaznam) {
+  const telo = $('zebricekBody');
+  let data = lokalniZebricek();
+  const vzd = await vzdalenyZebricek();
+  if (vzd !== null) data = slucZaznamy(vzd, data);
+
+  data.sort((x, y) => (y.body - x.body) || (new Date(x.kdy) - new Date(y.kdy)));
+
+  if (!data.length) {
+    telo.innerHTML = '<tr><td colspan="4" class="prazdno">Zatím tu nikdo není — buď první! 🎈</td></tr>';
+    return 0;
+  }
+
+  const medaile = ['🥇', '🥈', '🥉'];
+  telo.innerHTML = data.map((z, i) => {
+    const jaId = stav && stav.zapsano ? null : null;
+    const je_ja = stav && z.jmeno === stav.jmeno && z.body === stav.body && stav.hotovo;
+    const datum = z.kdy ? new Date(z.kdy).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+    return '<tr' + (je_ja ? ' class="ja"' : '') + '>' +
+      '<td class="poradi">' + (medaile[i] ? '<span class="medaile">' + medaile[i] + '</span>' : (i + 1) + '.') + '</td>' +
+      '<td>' + escapeHtml(z.jmeno) + '</td>' +
+      '<td class="body">' + z.body + '/' + (z.celkem || OTAZKY.length) + '</td>' +
+      '<td class="kdy">' + datum + '</td>' +
+      '</tr>';
+  }).join('');
+
+  // Pořadí právě dohrané hry (kvůli hlášce na závěrečné stránce)
+  let poradi = 0;
+  if (mujZaznam) {
+    const i = data.findIndex(z => z.id === mujZaznam.id);
+    if (i >= 0) poradi = i + 1;
+  }
+  if (!poradi && stav && stav.hotovo && stav.zapsano) {
+    const i = data.findIndex(z => z.jmeno === stav.jmeno && z.body === stav.body);
+    if (i >= 0) poradi = i + 1;
+  }
+  return poradi;
+}
+
+/* ============================================================
+   RESET ŽEBŘÍČKU
+   ============================================================ */
+async function resetZebricku(heslo) {
+  const zprava = $('resetZprava');
+  if (hashText(heslo) !== CONFIG.resetHash) {
+    zprava.style.color = 'var(--bad)';
+    zprava.textContent = 'Špatné heslo.';
+    return;
+  }
+  ulozLokalne([]);
+  await smazVzdalene();
+  zprava.style.color = 'var(--ok)';
+  zprava.textContent = 'Žebříček byl vymazán.';
+  $('resetHeslo').value = '';
+  $('resetForm').classList.remove('aktivni');
+  vykresliZebricek();
+}
+
+/* ============================================================
+   POČÍTADLO NÁVŠTĚV
+   ============================================================ */
+function pocitadlo() {
+  if (!CONFIG.pocitadloURL) return;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 4000);
+  fetch(CONFIG.pocitadloURL, { signal: ctrl.signal })
+    .then(r => r.json())
+    .then(d => { if (d && typeof d.value === 'number') $('pocitadlo').textContent = d.value; })
+    .catch(() => { $('pocitadlo').textContent = '–'; })
+    .finally(() => clearTimeout(t));
+}
+
+/* ============================================================
+   HUDBA
+   ============================================================ */
+const audio = $('hudba');
+let hudbaZapnuta = true;
+
+/* Ikony reproduktoru (2D, kreslené) */
+/* Vlaječka pro „Vzdávám to" — kreslená, aby držela barvu textu */
+const IKONA_VLAJKA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 21V3.6"/><path d="M6.9 4.7c3.1-1.7 5.9 1.1 9-.5v7.9c-3.1 1.6-5.9-1.2-9 .5z" fill="currentColor" stroke="none"/></svg>';
+function popisekVzdat(text) { return IKONA_VLAJKA + '<span>' + text + '</span>'; }
+
+const IKONA_ZVUK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.3h3.3L12 5.2v13.6L7.3 14.7H4z" fill="currentColor" stroke="none"/><path d="M15.6 9.4a3.7 3.7 0 0 1 0 5.2"/><path d="M18.3 6.9a7.3 7.3 0 0 1 0 10.2"/></svg>';
+const IKONA_TICHO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.3h3.3L12 5.2v13.6L7.3 14.7H4z" fill="currentColor" stroke="none"/><path d="M16.2 9.8l4.6 4.6"/><path d="M20.8 9.8l-4.6 4.6"/></svg>';
+
+function nastavIkonuHudby() {
+  const b = $('hudbaBtn');
+  b.innerHTML = hudbaZapnuta ? IKONA_ZVUK : IKONA_TICHO;
+  b.title = hudbaZapnuta ? 'Vypnout hudbu' : 'Zapnout hudbu';
+  b.setAttribute('aria-label', b.title);
+}
+
+/* --- Bezešvá smyčka přes Web Audio ---------------------------------------
+   Prohlížeč umí <audio loop>, ale při přetočení na začátek nadělá kratičkou
+   pauzu (MP3 má od kodéru na krajích ticho). Web Audio opakuje uvnitř jednoho
+   bufferu, takže je napojení přesné na vzorek. Zvuk bereme z assets/hudba-data.js
+   (tentýž MP3 v base64), aby to fungovalo i po otevření z disku, kde fetch()
+   neprojde. Když cokoli z toho selže, spadne se zpět na <audio loop>. */
+let ac = null, acGain = null, acZdroj = null, acBuffer = null;
+
+function b64naBuffer(b64) {
+  const bin = atob(b64);
+  const u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return u8.buffer;
+}
+
+async function pripravWebAudio() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC || !window.HUDBA_MP3_B64) return false;
+  try {
+    ac = new AC();
+    acBuffer = await new Promise((ok, chyba) => {
+      const r = ac.decodeAudioData(b64naBuffer(window.HUDBA_MP3_B64), ok, chyba);
+      if (r && r.then) r.then(ok, chyba);
+    });
+    acGain = ac.createGain();
+    acGain.gain.value = CONFIG.hlasitost;
+    acGain.connect(ac.destination);
+    return true;
+  } catch (e) { ac = null; acBuffer = null; return false; }
+}
+
+/* Dekodér MP3 přidá na začátek pár milisekund ticha — najdeme první zvuk
+   a smyčku vedeme přesně od něj po CONFIG.delkaSmycky sekund. */
+function zacatekZvuku(buf) {
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i += 32) {
+    if (Math.abs(d[i]) > 0.002) return Math.max(0, (i - 32) / buf.sampleRate);
+  }
+  return 0;
+}
+
+function spustWebAudio() {
+  if (!ac || !acBuffer) return false;
+  if (ac.state === 'suspended') ac.resume();
+  if (acGain) acGain.gain.value = CONFIG.hlasitost;
+  if (acZdroj) return true;
+  const z = ac.createBufferSource();
+  const zac = zacatekZvuku(acBuffer);
+  z.buffer = acBuffer;
+  z.loop = true;
+  z.loopStart = zac;
+  z.loopEnd = Math.min(acBuffer.duration, zac + (CONFIG.delkaSmycky || acBuffer.duration));
+  z.connect(acGain);
+  z.start(0, zac);
+  acZdroj = z;
+  return true;
+}
+
+function pripravHudbu() {
+  if (!CONFIG.hudba) return;
+  nastavIkonuHudby();
+  let zdroj = CONFIG.hudba;
+  if (CONFIG.hudbaOgg && audio.canPlayType('audio/ogg; codecs=vorbis')) zdroj = CONFIG.hudbaOgg;
+  audio.src = zdroj;
+  audio.volume = CONFIG.hlasitost;
+  audio.addEventListener('error', () => { if (!acBuffer) $('hudbaBtn').style.display = 'none'; }, { once: true });
+  audio.addEventListener('canplay', () => { $('hudbaBtn').style.display = ''; }, { once: true });
+  pripravWebAudio().then(ok => { if (ok) $('hudbaBtn').style.display = ''; });
+}
+
+function spustHudbu() {
+  if (!CONFIG.hudba || !hudbaZapnuta) return;
+  if (spustWebAudio()) { $('hudbaBtn').style.display = ''; return; }
+  audio.play().then(() => { $('hudbaBtn').style.display = ''; }).catch(() => {});
+}
+
+function prepniHudbu() {
+  hudbaZapnuta = !hudbaZapnuta;
+  if (hudbaZapnuta) {
+    if (!spustWebAudio()) audio.play().catch(() => {});
+  } else {
+    if (acGain) acGain.gain.value = 0;
+    if (ac && ac.suspend) ac.suspend();
+    audio.pause();
+  }
+  nastavIkonuHudby();
+}
+
+/* ============================================================
+   KONFETY
+   ============================================================ */
+function konfety(trvani) {
+  const c = $('konfety');
+  const ctx = c.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  function velikost() {
+    c.width = window.innerWidth * dpr;
+    c.height = window.innerHeight * dpr;
+    c.style.width = window.innerWidth + 'px';
+    c.style.height = window.innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  velikost();
+  c.classList.add('aktivni');
+
+  const barvy = ['#ff6b9d', '#f8b500', '#4facfe', '#43e97b', '#a55eea', '#ffd43b'];
+  const cast = [];
+  for (let i = 0; i < 140; i++) {
+    cast.push({
+      x: Math.random() * window.innerWidth,
+      y: -20 - Math.random() * window.innerHeight,
+      w: 6 + Math.random() * 8,
+      h: 8 + Math.random() * 10,
+      vy: 1.6 + Math.random() * 3.2,
+      vx: -1 + Math.random() * 2,
+      rot: Math.random() * Math.PI,
+      vrot: -0.12 + Math.random() * 0.24,
+      barva: barvy[Math.floor(Math.random() * barvy.length)]
+    });
+  }
+
+  const konec = Date.now() + trvani;
+  function krok() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    cast.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vrot;
+      if (p.y > window.innerHeight + 30 && Date.now() < konec) {
+        p.y = -20; p.x = Math.random() * window.innerWidth;
+      }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.barva;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    if (Date.now() < konec || cast.some(p => p.y < window.innerHeight + 30)) {
+      requestAnimationFrame(krok);
+    } else {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      c.classList.remove('aktivni');
+    }
+  }
+  requestAnimationFrame(krok);
+  window.addEventListener('resize', velikost);
+}
+
+/* ============================================================
+   THEME TOGGLE (standard KeCl: jedno tlačítko Auto → Den → Noc)
+   ============================================================ */
+(function () {
+  const html = document.documentElement;
+  const btn = $('themeToggle');
+  const iconEl = $('themeIcon');
+  const labelEl = $('themeLabel');
+  const hintEl = $('themeHint');
+  const ORDER = ['auto', 'day', 'night'];
+  let currentMode = 'auto';
+
+  function isDayNow() { const h = new Date().getHours(); return h >= 6 && h < 19; }
+
+  function render() {
+    btn.dataset.mode = currentMode;
+    if (currentMode === 'auto') {
+      const day = isDayNow();
+      html.setAttribute('data-theme', day ? 'light' : 'dark');
+      iconEl.textContent = '◐';
+      labelEl.textContent = 'Auto';
+      hintEl.textContent = '';
+      hintEl.style.display = 'none';
+    } else if (currentMode === 'day') {
+      html.setAttribute('data-theme', 'light');
+      iconEl.textContent = '☀';
+      labelEl.textContent = 'Den';
+      hintEl.style.display = 'none';
+    } else {
+      html.setAttribute('data-theme', 'dark');
+      iconEl.textContent = '☾';
+      labelEl.textContent = 'Noc';
+      hintEl.style.display = 'none';
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    currentMode = ORDER[(ORDER.indexOf(currentMode) + 1) % ORDER.length];
+    render();
+  });
+
+  render();
+  setInterval(() => { if (currentMode === 'auto') render(); }, 60000);
+})();
+
+/* ============================================================
+   START
+   ============================================================ */
+function spustHru(jmeno) {
+  stav = novyStav(jmeno);
+  ulozStav();
+  $('pozdrav').textContent = 'Vítej, ' + stav.jmeno + '! 👋';
+  vykresliMrizku();
+  scena('sceneHra');
+}
+
+function obnovHru(s) {
+  stav = s;
+  $('pozdrav').textContent = 'Vítej zpátky, ' + stav.jmeno + '! 👋';
+  vykresliMrizku();
+  if (stav.hotovo) {
+    $('konecJmeno').textContent = stav.jmeno + ', máš hotovo!';
+    $('konecBody').textContent = stav.body;
+    $('konecHodnoceni').textContent = hodnoceni(stav.body, OTAZKY.length);
+    scena('sceneKonec');
+    vykresliZebricek();
+  } else {
+    scena('sceneHra');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  $('vzdatBtn').innerHTML = popisekVzdat('Vzdávám to');
+  requestAnimationFrame(srovnejHlavicku);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(srovnejHlavicku);
+  pripravHudbu();
+  pocitadlo();
+
+  // formulář se jménem
+  $('jmenoForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const jmeno = $('jmenoInput').value.trim().replace(/\s+/g, ' ');
+    if (jmeno.length < 2) {
+      $('jmenoChyba').textContent = 'Napiš prosím aspoň dvě písmenka. 🙂';
+      $('jmenoInput').focus();
+      return;
+    }
+    $('jmenoChyba').textContent = '';
+    spustHudbu();
+    spustHru(jmeno);
+  });
+
+  // karta
+  $('kartaZavrit').addEventListener('click', () => {
+    if (aktualniIdx !== null && Object.prototype.hasOwnProperty.call(stav.odpovedi, aktualniIdx)) pokracovat();
+    else zavriKartu();
+  });
+  $('kartaPokracovat').addEventListener('click', pokracovat);
+  $('karta').addEventListener('click', (e) => { if (e.target === $('karta')) $('kartaZavrit').click(); });
+
+  // lightbox
+  $('lightboxZavrit').addEventListener('click', zavriLightbox);
+  $('lightbox').addEventListener('click', (e) => { if (e.target !== $('lightboxZavrit')) zavriLightbox(); });
+
+  // klávesnice
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if ($('lightbox').classList.contains('aktivni')) zavriLightbox();
+    else if ($('karta').classList.contains('aktivni')) $('kartaZavrit').click();
+  });
+
+  // závěr
+  $('zpetNaMrizku').addEventListener('click', () => scena('sceneHra'));
+  $('zebricekBtn').addEventListener('click', () => scena('sceneKonec'));
+  $('hratZnovu').addEventListener('click', () => {
+    try { sessionStorage.removeItem(KLIC_STAV); } catch (e) {}
+    location.reload();
+  });
+
+  // hudba
+  $('hudbaBtn').addEventListener('click', prepniHudbu);
+
+  // Vzdávám to — druhé kliknutí do 4 s potvrdí
+  $('vzdatBtn').addEventListener('click', () => {
+    if (!stav || stav.hotovo) return;
+    const b = $('vzdatBtn');
+    if (Date.now() - vzdatKlik > 4000) {
+      vzdatKlik = Date.now();
+      b.innerHTML = popisekVzdat('Opravdu skončit?');
+      setTimeout(() => {
+        if (Date.now() - vzdatKlik >= 4000) { b.innerHTML = popisekVzdat('Vzdávám to'); vzdatKlik = 0; }
+      }, 4200);
+      return;
+    }
+    vzdatKlik = 0;
+    b.innerHTML = popisekVzdat('Vzdávám to');
+    dokoncit(true);
+  });
+
+  // reset žebříčku
+  $('resetToggle').addEventListener('click', () => {
+    $('resetForm').classList.toggle('aktivni');
+    $('resetZprava').textContent = '';
+    if ($('resetForm').classList.contains('aktivni')) $('resetHeslo').focus();
+  });
+  $('resetForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    resetZebricku($('resetHeslo').value);
+  });
+
+  // obnovení rozehrané hry po refreshi
+  const ulozeny = nactiStav();
+  if (ulozeny) obnovHru(ulozeny);
+  else $('jmenoInput').focus();
+});
+</script>
+
+</body>
+</html>
