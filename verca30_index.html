@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.13
+   30 s Verčou — (c) 2026 KeCl v1.14
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -103,7 +103,18 @@ h1, h2, h3 { line-height: 1.15; }
   white-space: nowrap;
 }
 .h1-dort { width: 1.05em; height: 1.05em; flex: none; }
-.header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.app-header h1 { margin-right: auto; }
+.header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; order: 2; }
+.header-ikony { display: flex; align-items: center; gap: 8px; order: 3; }
+
+/* Mobil: první řádek nadpis + ikony, druhý řádek ovládání a skóre */
+@media (max-width: 760px) {
+  .app-header h1 { font-size: clamp(1.75rem, 7vw, 2.3rem); }
+  .header-ikony { order: 2; }
+  .header-actions { order: 3; flex-basis: 100%; justify-content: flex-start; }
+  .theme-toggle-label { display: none; }
+  .theme-toggle { padding: 7px 11px; }
+}
 .skore-box {
   display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
   font-size: .95rem; font-weight: 400;
@@ -234,8 +245,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 @media (min-width: 761px) and (max-width: 1150px) {
   .mrizka { --pomer: 4 / 3; grid-template-columns: repeat(5, 1fr); max-width: max(560px, calc((100svh - 240px) * 1.11)); }
 }
-@media (max-width: 760px)  { .mrizka { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 380px)  { .mrizka { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px)  { .mrizka { grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 2vw, 14px); } }
 
 .okenko {
   all: unset;
@@ -526,13 +536,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
         <rect x="2.6" y="19.6" width="18.8" height="2.2" rx="1.1"/>
       </g>
     </svg><span>30 s Verčou</span></h1>
-  <div class="header-actions">
-    <button class="btn btn-vzdat" id="vzdatBtn" type="button" title="Ukončit hru a zobrazit žebříček" style="display:none"></button>
-    <button class="btn btn-vzdat" id="zebricekBtn" type="button" title="Zpět na žebříček" style="display:none">🏅 Žebříček</button>
-    <div class="skore-box" id="skoreBox" style="display:none">
-      <span class="chip">Otevřeno <b><span id="pocetOtevrenych">0</span>/30</b></span>
-      <span class="chip">Body <b><span id="pocetBodu">0</span></b></span>
-    </div>
+  <div class="header-ikony">
     <button class="btn btn-ikona" id="hudbaBtn" type="button" title="Vypnout hudbu" aria-label="Vypnout hudbu" style="display:none"></button>
     <button class="theme-toggle" id="themeToggle" type="button" data-mode="auto"
             aria-label="Přepnout režim zobrazení" title="Klikni pro přepnutí režimu (Auto → Den → Noc)">
@@ -540,6 +544,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
       <span class="theme-toggle-label" id="themeLabel">Auto</span>
       <span class="theme-toggle-hint" id="themeHint" style="display:none"></span>
     </button>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-vzdat" id="vzdatBtn" type="button" title="Ukončit hru a zobrazit žebříček" style="display:none"></button>
+    <button class="btn btn-vzdat" id="zebricekBtn" type="button" title="Zpět na žebříček" style="display:none">🏅 Žebříček</button>
+    <div class="skore-box" id="skoreBox" style="display:none">
+      <span class="chip">Otevřeno <b><span id="pocetOtevrenych">0</span>/30</b></span>
+      <span class="chip">Body <b><span id="pocetBodu">0</span></b></span>
+    </div>
   </div>
 </header>
 
@@ -550,7 +562,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
     <div class="uvod-wrap">
       <div class="uvod-emoji">🎉🎂🎈</div>
       <h2>Kdo to k nám sem přišel?</h2>
-      <p>Napiš svoje jméno nebo přezdívku a pustíme se do hry.</p>
+      <p>&nbsp;</p>
       <form id="jmenoForm" autocomplete="off">
         <input class="pole" id="jmenoInput" type="text" maxlength="24" placeholder="Tvoje jméno…"
                aria-label="Tvoje jméno" autocomplete="off">
@@ -608,7 +620,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.13</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.14</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -642,14 +654,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.13
+   30 s Verčou — (c) 2026 KeCl v1.14
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.13',
+  APP_VERSION: 'v1.14',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -1315,20 +1327,43 @@ function b64naBuffer(b64) {
   return u8.buffer;
 }
 
+const AC = window.AudioContext || window.webkitAudioContext;
+const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+
+/* Dekódování běží hned po načtení stránky v offline kontextu — ten nepotřebuje
+   uživatelské gesto (na iOS by se běžný AudioContext založený mimo gesto
+   nerozjel). */
 async function pripravWebAudio() {
-  const AC = window.AudioContext || window.webkitAudioContext;
-  if (!AC || !window.HUDBA_MP3_B64) return false;
+  if (!AC || !OAC || !window.HUDBA_MP3_B64) return false;
   try {
-    ac = new AC();
+    const data = b64naBuffer(window.HUDBA_MP3_B64);
+    const off = new OAC(2, 1, 44100);
     acBuffer = await new Promise((ok, chyba) => {
-      const r = ac.decodeAudioData(b64naBuffer(window.HUDBA_MP3_B64), ok, chyba);
+      const r = off.decodeAudioData(data, ok, chyba);
       if (r && r.then) r.then(ok, chyba);
     });
-    acGain = ac.createGain();
-    acGain.gain.value = CONFIG.hlasitost;
-    acGain.connect(ac.destination);
     return true;
-  } catch (e) { ac = null; acBuffer = null; return false; }
+  } catch (e) { acBuffer = null; return false; }
+}
+
+/* Zvukový kontext zakládáme (a probouzíme) výhradně uvnitř kliknutí/doteku. */
+function zapniKontext() {
+  if (!AC) return false;
+  try {
+    if (!ac) {
+      ac = new AC();
+      acGain = ac.createGain();
+      acGain.gain.value = hudbaZapnuta ? CONFIG.hlasitost : 0;
+      acGain.connect(ac.destination);
+    }
+    if (ac.state === 'suspended' && ac.resume) ac.resume();
+    return true;
+  } catch (e) { ac = null; return false; }
+}
+
+/* iOS občas povolí zvuk až při dalším doteku — zkusíme to znovu. */
+function zkusPriDalsimDoteku() {
+  document.addEventListener('pointerdown', () => { spustHudbu(); }, { once: true, passive: true });
 }
 
 /* Dekodér MP3 přidá na začátek pár milisekund ticha — najdeme první zvuk
@@ -1342,8 +1377,7 @@ function zacatekZvuku(buf) {
 }
 
 function spustWebAudio() {
-  if (!ac || !acBuffer) return false;
-  if (ac.state === 'suspended') ac.resume();
+  if (!acBuffer || !zapniKontext()) return false;
   if (acGain) acGain.gain.value = CONFIG.hlasitost;
   if (acZdroj) return true;
   const z = ac.createBufferSource();
@@ -1368,12 +1402,18 @@ function pripravHudbu() {
   audio.addEventListener('error', () => { if (!acBuffer) $('hudbaBtn').style.display = 'none'; }, { once: true });
   audio.addEventListener('canplay', () => { $('hudbaBtn').style.display = ''; }, { once: true });
   pripravWebAudio().then(ok => { if (ok) $('hudbaBtn').style.display = ''; });
+  // Na mobilu se kontext probouzí dotekem — po prvním doteku to zkusíme znovu.
 }
 
 function spustHudbu() {
   if (!CONFIG.hudba || !hudbaZapnuta) return;
-  if (spustWebAudio()) { $('hudbaBtn').style.display = ''; return; }
-  audio.play().then(() => { $('hudbaBtn').style.display = ''; }).catch(() => {});
+  if (spustWebAudio()) {
+    audio.pause();
+    $('hudbaBtn').style.display = '';
+    if (!ac || ac.state !== 'running') zkusPriDalsimDoteku();
+    return;
+  }
+  audio.play().then(() => { $('hudbaBtn').style.display = ''; }).catch(() => { zkusPriDalsimDoteku(); });
 }
 
 function prepniHudbu() {
