@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.15
+   30 s Verčou — (c) 2026 KeCl v1.16
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -24,6 +24,8 @@
   --accent: #d6336c;
   --accent2: #7048e8;
   --accent-text: #ffffff;
+  /* O kolik se v kvízové kartě zvětší písmo (mobil má vlastní hodnotu níž) */
+  --kviz-plus: 1px;
   --ok: #2b8a3e;
   --ok-bg: #d3f9d8;
   --bad: #c92a2a;
@@ -109,6 +111,7 @@ h1, h2, h3 { line-height: 1.15; }
 
 /* Mobil: první řádek nadpis + ikony, druhý řádek ovládání a skóre */
 @media (max-width: 760px) {
+  :root { --kviz-plus: 2px; }
   .app-header h1 { font-size: clamp(1.75rem, 7vw, 2.3rem); }
   .header-ikony { order: 2; }
   .header-actions { order: 3; flex-basis: 100%; justify-content: flex-start; }
@@ -365,7 +368,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 }
 
 .karta-kviz { padding: clamp(18px, 2.6vw, 34px); display: flex; flex-direction: column; justify-content: center; }
-.karta-otazka { margin: 0 0 20px; font-size: clamp(1.15rem, 2.3vw, 1.7rem); line-height: 1.3; }
+.karta-otazka { margin: 0 0 20px; font-size: calc(clamp(1.15rem, 2.3vw, 1.7rem) + var(--kviz-plus)); line-height: 1.3; }
 .odpovedi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 @media (max-width: 1100px) { .odpovedi { grid-template-columns: 1fr; } }
 .odpoved {
@@ -375,7 +378,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
   border: 2px solid var(--border);
   border-radius: 16px;
   padding: 14px 16px;
-  font-size: clamp(1rem, 1.9vw, 1.15rem);
+  font-size: calc(clamp(1rem, 1.9vw, 1.15rem) + var(--kviz-plus));
   font-weight: 600;
   cursor: pointer;
   display: flex; align-items: center; gap: 12px;
@@ -386,7 +389,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 .odpoved:disabled { cursor: default; }
 .odpoved .pismeno {
   flex: 0 0 auto;
-  width: 34px; height: 34px; border-radius: 50%;
+  width: calc(34px + var(--kviz-plus)); height: calc(34px + var(--kviz-plus)); border-radius: 50%;
   background: var(--accent); color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-weight: 800;
@@ -403,7 +406,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
   border-radius: 16px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-size: calc(clamp(1rem, 2vw, 1.15rem) + var(--kviz-plus));
   display: none;
 }
 .vysledek-radek.aktivni { display: block; animation: vstup .3s ease both; }
@@ -620,7 +623,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.15</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.16</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -654,14 +657,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.15
+   30 s Verčou — (c) 2026 KeCl v1.16
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.15',
+  APP_VERSION: 'v1.16',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -715,7 +718,7 @@ const CONFIG = {
 const OTAZKY = [
   { foto:'01.jpg', otazka:'Co má Verunka na krku?', moznosti:['mateřské znamínko','dalekohled','krasohled','dalekopohled'], spravne:3, komentar:'Jasně že dalekopohled, tak tomu Verča vždycky říkala 😄' },
   { foto:'02.jpg', otazka:'Ve které zemi byla Verča tentokrát?', moznosti:['Borneo','Šrí Lanka','Mauricius','Austrálie'], spravne:3, komentar:'No jasně, to je přece letošní fotka ze země klokanů 🦘' },
-  { foto:'03.jpg', otazka:'Otázka č. 3 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
+  { foto:'03.jpg', otazka:'Kolik roků tenkrát Verunka slavila?', moznosti:['15','14','17','16'], spravne:0, komentar:'Byly to dvoje kulatiny — babička slavila 70 a Verunka 15 🎂' },
   { foto:'04.jpg', otazka:'Otázka č. 4 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
   { foto:'05.jpg', otazka:'Otázka č. 5 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
   { foto:'06.jpg', otazka:'Otázka č. 6 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
