@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.14
+   30 s Verčou — (c) 2026 KeCl v1.15
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -620,7 +620,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.14</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.15</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -654,14 +654,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.14
+   30 s Verčou — (c) 2026 KeCl v1.15
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.14',
+  APP_VERSION: 'v1.15',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -683,6 +683,10 @@ const CONFIG = {
   // Přesná délka smyčky v sekundách (podle připraveného souboru) — používá
   // se pro bezešvé opakování přes Web Audio.
   delkaSmycky: 52.369524,
+
+  // Krátké ticho přehrané přes <audio> — na iPhonu tím přepneme zvukovou
+  // relaci, jinak přepínač vyzvánění ztlumí i Web Audio.
+  ticho: 'assets/ticho.mp3',
   hlasitost: 0.20,
 
   // Heslo pro reset žebříčku (uloženo jako hash, viz funkce hashText)
@@ -1318,7 +1322,7 @@ function nastavIkonuHudby() {
    bufferu, takže je napojení přesné na vzorek. Zvuk bereme z assets/hudba-data.js
    (tentýž MP3 v base64), aby to fungovalo i po otevření z disku, kde fetch()
    neprojde. Když cokoli z toho selže, spadne se zpět na <audio loop>. */
-let ac = null, acGain = null, acZdroj = null, acBuffer = null;
+let ac = null, acGain = null, acZdroj = null, acBuffer = null, webAudioVypnuto = false;
 
 function b64naBuffer(b64) {
   const bin = atob(b64);
@@ -1346,9 +1350,27 @@ async function pripravWebAudio() {
   } catch (e) { acBuffer = null; return false; }
 }
 
+/* iOS: dokud stránka nepřehraje něco přes <audio>, je Web Audio ztlumené
+   přepínačem vyzvánění. Krátké ticho v médiovém přehrávači zvukovou relaci
+   přepne, takže hudba je slyšet i v tichém režimu. */
+let ticheAudio = null;
+function odemkniZvuk() {
+  if (!CONFIG.ticho) return;
+  try {
+    if (!ticheAudio) {
+      ticheAudio = new Audio(CONFIG.ticho);
+      ticheAudio.loop = true;
+      ticheAudio.volume = 0.0001;
+      ticheAudio.setAttribute('playsinline', '');
+    }
+    if (ticheAudio.paused) ticheAudio.play().catch(() => {});
+  } catch (e) {}
+}
+
 /* Zvukový kontext zakládáme (a probouzíme) výhradně uvnitř kliknutí/doteku. */
 function zapniKontext() {
-  if (!AC) return false;
+  if (!AC || webAudioVypnuto) return false;
+  odemkniZvuk();
   try {
     if (!ac) {
       ac = new AC();
@@ -1377,7 +1399,7 @@ function zacatekZvuku(buf) {
 }
 
 function spustWebAudio() {
-  if (!acBuffer || !zapniKontext()) return false;
+  if (webAudioVypnuto || !acBuffer || !zapniKontext()) return false;
   if (acGain) acGain.gain.value = CONFIG.hlasitost;
   if (acZdroj) return true;
   const z = ac.createBufferSource();
@@ -1407,23 +1429,48 @@ function pripravHudbu() {
 
 function spustHudbu() {
   if (!CONFIG.hudba || !hudbaZapnuta) return;
+  odemkniZvuk();
   if (spustWebAudio()) {
     audio.pause();
     $('hudbaBtn').style.display = '';
-    if (!ac || ac.state !== 'running') zkusPriDalsimDoteku();
+    hlidejZvuk();
     return;
   }
-  audio.play().then(() => { $('hudbaBtn').style.display = ''; }).catch(() => { zkusPriDalsimDoteku(); });
+  prehrajZalohu();
+}
+
+/* Záloha: obyčejný <audio loop>. Má na spoji smyčky kratičkou pauzu, ale hraje
+   všude — včetně iPhonu, kde se Web Audio nemusí rozjet. */
+function prehrajZalohu() {
+  audio.play().then(() => { $('hudbaBtn').style.display = ''; }).catch(() => zkusPriDalsimDoteku());
+}
+
+/* Když se Web Audio do sekundy po gestu nerozběhne, přepneme na zálohu. */
+let hlidacId = 0;
+function hlidejZvuk() {
+  clearTimeout(hlidacId);
+  hlidacId = setTimeout(() => {
+    if (!hudbaZapnuta) return;
+    if (!ac || ac.state !== 'running') { zrusWebAudio(); prehrajZalohu(); }
+  }, 1000);
+}
+
+function zrusWebAudio() {
+  try { if (acZdroj) { acZdroj.stop(); acZdroj.disconnect(); } } catch (e) {}
+  acZdroj = null;
+  webAudioVypnuto = true;
 }
 
 function prepniHudbu() {
   hudbaZapnuta = !hudbaZapnuta;
   if (hudbaZapnuta) {
-    if (!spustWebAudio()) audio.play().catch(() => {});
+    spustHudbu();
   } else {
+    clearTimeout(hlidacId);
     if (acGain) acGain.gain.value = 0;
     if (ac && ac.suspend) ac.suspend();
     audio.pause();
+    if (ticheAudio) ticheAudio.pause();
   }
   nastavIkonuHudby();
 }
@@ -1558,7 +1605,29 @@ function obnovHru(s) {
   }
 }
 
+/* Diagnostika zvuku — otevři appku s ?zvuk=1 na konci adresy. */
+function zvukDiagnostika() {
+  if (!/[?&]zvuk=1/.test(location.search)) return;
+  const d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:6px;right:6px;bottom:6px;z-index:999;background:rgba(0,0,0,.88);' +
+    'color:#7CFC9B;font:11px/1.4 ui-monospace,monospace;padding:10px;border-radius:12px;white-space:pre-wrap;max-height:42vh;overflow:auto';
+  document.body.appendChild(d);
+  const vypis = () => {
+    d.textContent =
+      'UA: ' + navigator.userAgent + '\n' +
+      'hudba-data.js: ' + (window.HUDBA_MP3_B64 ? Math.round(window.HUDBA_MP3_B64.length / 1024) + ' kB' : 'CHYBÍ') + '\n' +
+      'buffer: ' + (acBuffer ? acBuffer.duration.toFixed(2) + ' s' : 'nedekódováno') + '\n' +
+      'kontext: ' + (ac ? ac.state : 'nezaložen') + ' | zdroj: ' + (acZdroj ? 'běží' : 'ne') + ' | webAudio vypnuto: ' + webAudioVypnuto + '\n' +
+      'audio: paused=' + audio.paused + ' t=' + audio.currentTime.toFixed(1) + ' ready=' + audio.readyState +
+        ' err=' + (audio.error ? audio.error.code : '-') + ' src=' + (audio.currentSrc || '').split('/').pop() + '\n' +
+      'ticho: ' + (ticheAudio ? 'paused=' + ticheAudio.paused : 'nezaloženo') + ' | hudba zapnutá: ' + hudbaZapnuta;
+  };
+  vypis();
+  setInterval(vypis, 700);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  zvukDiagnostika();
   $('vzdatBtn').innerHTML = popisekVzdat('Vzdávám to');
   requestAnimationFrame(srovnejHlavicku);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(srovnejHlavicku);
