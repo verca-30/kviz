@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.25
+   30 s Verčou — (c) 2026 KeCl v1.29
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -378,8 +378,8 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 .rodinna-odznak {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 8px;
-  margin: 0 0 14px; padding: 8px 16px; border-radius: 999px;
-  font-size: calc(clamp(.92rem, 1.5vw, 1.05rem) + var(--kviz-plus));
+  margin: 0 0 22px; padding: 6px 14px; border-radius: 999px;
+  font-size: calc(clamp(.8rem, 1.25vw, .92rem) + var(--kviz-plus));
   font-weight: 800; letter-spacing: .03em; text-transform: uppercase;
   background: linear-gradient(135deg,#ff9a9e,#fad0c4); color: #7a2d3f;
   box-shadow: 0 3px 10px rgba(0,0,0,.14);
@@ -467,13 +467,13 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 }
 .konec-karta h2 { margin: 0 0 10px; font-size: clamp(1.6rem, 5vw, 2.6rem); }
 .velke-skore {
-  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-size: clamp(2.2rem, 7vw, 3.4rem);
   font-weight: 900; line-height: 1;
   background: linear-gradient(95deg, var(--accent), var(--accent2));
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  margin: 10px 0 4px;
+  margin: 8px 0 0;
 }
-.konec-karta .hodnoceni { font-size: clamp(1.05rem, 2.4vw, 1.3rem); color: var(--text-muted); margin: 0 0 18px; }
+.konec-karta .hodnoceni { font-size: clamp(1.05rem, 2.4vw, 1.3rem); color: var(--text-muted); margin: 26px 0 28px; }
 .konec-akce { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
 .tabulka-box {
@@ -640,7 +640,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.25</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.29</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -676,14 +676,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.25
+   30 s Verčou — (c) 2026 KeCl v1.29
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.25',
+  APP_VERSION: 'v1.29',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -754,18 +754,18 @@ const OTAZKY = [
   { foto:'09.jpg', otazka:'Kolikátý měsíc dvojčátek sestřenice a bratrance si Verunka užívá?', moznosti:['8.','9.','10.','11.'], spravne:'10.', komentar:'Jo, jo – letí to jako voda 👧👦' },
   { foto:'10.jpg', otazka:'Kde se to Verča navzájem hypnotizuje s rybou?', moznosti:['aquapark na Rhodosu','plavecký bazén v Ostravě','Rybí dům v Chotěbuzi','plovárna v Brně'], spravne:'aquapark na Rhodosu', komentar:'Rhodos je z těch míst nejlákavější – takže správně 🐠' },
   { foto:'11.jpg', otazka:'Kde to spolu Verča s Agi vítají východ slunce?', moznosti:['Mallorca','Rhodos','Korfu','Thassos'], spravne:'Mallorca', komentar:'Ano, stejně jako malý Rafael Nadal 🎾' },
-  { foto:'12.jpg', otazka:'Otázka č. 12 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
-  { foto:'13.jpg', otazka:'Otázka č. 13 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
-  { foto:'14.jpg', otazka:'Otázka č. 14 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'12.jpg', otazka:'V jaké řece se Verča koupe?', moznosti:['Vrbas (Banja Luka)','Olše (Český Těšín)','Olše (polský Těšín)','Ostravice (Vratimov)'], spravne:'Vrbas (Banja Luka)', komentar:'Koupání pod vrbami je určitě nejlepší v řece Vrbas 🌳' },
+  { foto:'13.jpg', otazka:'Na co to sestřičky valí oči?', moznosti:['na vodu z Mariina pramene','na drobný hmyz v lahvích','na Mirdžu, jak „zaběhla za strom"','na krásy lahví Dobré vody'], spravne:'na vodu z Mariina pramene', komentar:'Mattoni už není… 💧' },
+  { foto:'14.jpg', otazka:'Do jakých hor si udělaly turistky výlet?', moznosti:['Jeseníky','Beskydy','Krkonoše','Jizerské hory'], spravne:'Jeseníky', komentar:'Není vysílač jako vysílač… 📡' },
   { foto:'15.jpg', otazka:'Otázka č. 15 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'16.jpg', otazka:'Otázka č. 16 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'17.jpg', otazka:'Otázka č. 17 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'18.jpg', otazka:'Otázka č. 18 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'19.jpg', otazka:'Otázka č. 19 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'20.jpg', otazka:'V kolika letech podle rodiny Verunka poprvé letěla letadlem?', moznosti:['12','13','15','17'], spravne:'15', rodinna:true, komentar:'Odhady šly od dvanácti do devatenácti, dáváme tedy střed ✈️' },
-  { foto:'21.jpg', otazka:'Otázka č. 21 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
-  { foto:'22.jpg', otazka:'Otázka č. 22 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
-  { foto:'23.jpg', otazka:'Otázka č. 23 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'21.jpg', otazka:'Jaké první slovo se rodině vybaví, když si vzpomene na Verču?', moznosti:['milá','žabička','úsměvavá','kniha'], spravne:'milá', rodinna:true, komentar:'Sešly se nám samé hezké odpovědi a vyhrála prostě milá 😊' },
+  { foto:'22.jpg', otazka:'Na jaké nejoblíbenější Verunčině hračce se rodina nejvíc shodla?', moznosti:['panenka','plyšový krtek','tahací kačer','provázek'], spravne:'panenka', rodinna:true, komentar:'Sice vyhrála panenka, ale provázek jí šlapal na paty 📿' },
+  { foto:'23.jpg', otazka:'Kolik knih podle rodiny Verunka doposud přečetla?', moznosti:['cca 100','cca 250','cca 500','přes 600'], spravne:'cca 250', rodinna:true, komentar:'Nejskromnější tipoval padesát, nejodvážnější šest a půl stovky 📚' },
   { foto:'24.jpg', otazka:'Otázka č. 24 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'25.jpg', otazka:'Otázka č. 25 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'26.jpg', otazka:'Otázka č. 26 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
@@ -1195,7 +1195,8 @@ async function dokoncit(vzdal) {
   $('konecBody').textContent = stav.body;
   // Po vzdání body neukazujeme — do žebříčku se stejně nepočítají.
   $('konecSkore').style.display = vzdal ? 'none' : '';
-  $('konecHodnoceni').textContent = '';
+  // U nedokončené hry rovnou vysvětlíme, proč nejde do žebříčku.
+  $('konecHodnoceni').textContent = kompletni ? '' : '🏳️ Nedokončený kvíz se do žebříčku nezapisuje.';
 
   scena('sceneKonec');
   if (!vzdal) konfety(7000);
