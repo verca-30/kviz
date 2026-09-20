@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou - (c) 2026 KeCl v1.39
+   30 s Verčou - (c) 2026 KeCl v2.0
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -664,7 +664,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.39</footer>
+<footer class="app-footer">(c) 2026 KeCl v2.0</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -700,14 +700,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou - (c) 2026 KeCl v1.39
+   30 s Verčou - (c) 2026 KeCl v2.0
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.39',
+  APP_VERSION: 'v2.0',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -1260,6 +1260,12 @@ const HLASKY_DALE = [
 
 function hlaskaPodlePoradi(poradi, body, celkem) {
   let t;
+  if (!poradi || poradi < 1) {
+    // Pořadí se nepodařilo určit - radši obecná hláška než „0. místo".
+    t = '🎉 Hotovo! Výsledek je zapsaný v žebříčku.';
+    if (body === celkem) t += ' A k tomu plný počet bodů!';
+    return t;
+  }
   if (poradi === 1)      t = '🥇 VÍTĚZSTVÍ! Nikdo zatím nezná ' + CONFIG.oslavenkyneKoho + ' líp než ty. Smekáme!';
   else if (poradi === 2) t = '🥈 Stříbro! O fous za vítězem a vysoko nad všemi ostatními.';
   else if (poradi === 3) t = '🥉 Bronz! Bedna je bedna - gratulujeme!';
@@ -1387,12 +1393,14 @@ async function vykresliZebricek(mujZaznam) {
 
   // Když server nejede, řekneme to nahlas - jinak to vypadá, že se žebříček
   // „rozchází" mezi počítačem a mobilem (každý vidí jen svoje lokální výsledky).
-  const stav = $('zebricekStav');
-  if (stav) {
-    stav.textContent = zebricekChyba
+  // POZOR: tahle proměnná se NESMÍ jmenovat `stav` - zastínila by globální herní
+  // stav a rozbila jak zvýraznění vlastního řádku, tak výpočet pořadí (v1.39).
+  const stavEl = $('zebricekStav');
+  if (stavEl) {
+    stavEl.textContent = zebricekChyba
       ? '⚠️ Společný žebříček se nepodařilo načíst (' + zebricekChyba + '). Vidíš jen výsledky z tohoto zařízení.'
       : '';
-    stav.style.display = zebricekChyba ? '' : 'none';
+    stavEl.style.display = zebricekChyba ? '' : 'none';
   }
 
   data.sort((x, y) => (y.body - x.body) || (new Date(x.kdy) - new Date(y.kdy)));
@@ -1404,7 +1412,6 @@ async function vykresliZebricek(mujZaznam) {
 
   const medaile = ['🥇', '🥈', '🥉'];
   telo.innerHTML = data.map((z, i) => {
-    const jaId = stav && stav.zapsano ? null : null;
     const je_ja = stav && z.jmeno === stav.jmeno && z.body === stav.body && stav.hotovo;
     const datum = z.kdy ? new Date(z.kdy).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
     return '<tr' + (je_ja ? ' class="ja"' : '') + '>' +
