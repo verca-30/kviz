@@ -6,10 +6,11 @@
 <meta name="robots" content="noindex, nofollow">
 <title>30 s Verčou</title>
 <link rel="icon" href="assets/ikona-32.png" sizes="32x32">
+<link rel="icon" href="assets/ikona-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.35
+   30 s Verčou - (c) 2026 KeCl v1.38
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -117,7 +118,7 @@ h1, h2, h3 { line-height: 1.15; }
   .jen-sirs { display: none; }
   .jen-uzke { display: inline; }
   /* v1.30: na mobilu je všechno písmo o ~16 % větší. Skoro celá appka počítá
-     velikosti v rem, takže stačí zvednout kořenovou velikost — poměry zůstanou. */
+     velikosti v rem, takže stačí zvednout kořenovou velikost - poměry zůstanou. */
   html { font-size: 18.5px; }
   body { font-size: 1rem; }
   :root { --kviz-plus: 3px; }
@@ -163,7 +164,7 @@ h1, h2, h3 { line-height: 1.15; }
   font-size: clamp(1rem, 2vw, 1.15rem);
   padding: 13px 30px;
 }
-/* Druhé tlačítko na závěrečné stránce — stejně velké jako hlavní, jen bez výplně */
+/* Druhé tlačítko na závěrečné stránce - stejně velké jako hlavní, jen bez výplně */
 .btn-vedlejsi {
   font-size: clamp(1rem, 2vw, 1.15rem);
   padding: 13px 30px;
@@ -174,7 +175,7 @@ h1, h2, h3 { line-height: 1.15; }
 .btn-vedlejsi:hover { background: color-mix(in srgb, var(--accent2) 10%, var(--surface)); }
 .btn-ikona { padding: 7px 11px; display: flex; align-items: center; }
 .btn-ikona svg { width: 25px; height: 25px; display: block; }
-/* Tlačítko „Vzdávám to" — ukončí rozehranou hru a skočí na žebříček */
+/* Tlačítko „Vzdávám to" - ukončí rozehranou hru a skočí na žebříček */
 .btn-vzdat {
   border-color: var(--border);
   color: var(--text);
@@ -240,7 +241,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 /* === MŘÍŽKA OKÉNEK ======================================= */
 .hra-hlavicka { text-align: center; margin-bottom: clamp(12px, 2.5vw, 22px); }
-.hra-hlavicka h2 { margin: 0 0 4px; font-size: clamp(1.15rem, 3vw, 1.7rem); }
+.hra-hlavicka h2 { margin: 0 0 4px; font-size: clamp(1.45rem, 3vw, 1.7rem); }
 .hra-hlavicka p { margin: 0; color: var(--text-muted); font-size: clamp(.92rem, 2vw, 1.05rem); }
 .mrizka {
   display: grid;
@@ -254,8 +255,8 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 @media (min-width: 1151px) {
   /* v1.21: 6 sloupců × 5 řádků, mřížka téměř přes celou šířku okna.
      Ladicí šrouby:
-       – počet sloupců: repeat(6, 1fr)  (5 sloupců = 5×6 místo 6×5)
-       – šířka: 94vw = „skoro celá obrazovka"; strop 2000px kvůli ultrawide
+       - počet sloupců: repeat(6, 1fr)  (5 sloupců = 5×6 místo 6×5)
+       - šířka: 94vw = „skoro celá obrazovka"; strop 2000px kvůli ultrawide
      Kdyby bylo potřeba zase odvozovat od výšky okna (fit na N řad), vrať
      max-width: calc((100svh - 240px) * K), K = 2,16 (3 řady) / 1,62 (4) / 1,30 (5). */
   .mrizka { --pomer: 4 / 3; grid-template-columns: repeat(6, 1fr); max-width: min(2000px, 94vw); }
@@ -317,7 +318,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
   border: 2px solid var(--border);
 }
 /* v1.34: fotka na dlaždici se už neořezává. Zobrazí se celá (object-fit:contain)
-   a prázdné okraje vyplní tatáž fotka rozmazaná — u fotek na výšku to vypadá
+   a prázdné okraje vyplní tatáž fotka rozmazaná - u fotek na výšku to vypadá
    mnohem líp než dřívější ořez na střed. Cestu k fotce dodává JS v --foto. */
 .face-back::before {
   content: '';
@@ -394,7 +395,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 }
 
 .karta-kviz { padding: clamp(18px, 2.6vw, 34px); display: flex; flex-direction: column; justify-content: center; }
-/* Rodinná otázka — výrazný tag vlevo nad otázkou a vysvětlivka pod odpověďmi */
+/* Rodinná otázka - výrazný tag vlevo nad otázkou a vysvětlivka pod odpověďmi */
 .rodinna-odznak {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 8px;
@@ -504,10 +505,10 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
   box-shadow: var(--shadow);
   margin-bottom: 22px;
 }
-.tabulka-box h3 { margin: 0 0 14px; font-size: clamp(1.2rem, 3vw, 1.6rem); text-align: center; }
-.zebricek { width: 100%; border-collapse: collapse; font-size: clamp(.95rem, 2vw, 1.1rem); }
+.tabulka-box h3 { margin: 0 0 16px; font-size: clamp(1.5rem, 3.4vw, 2rem); text-align: center; }
+.zebricek { width: 100%; border-collapse: collapse; font-size: clamp(1.1rem, 2.3vw, 1.3rem); }
 .zebricek th, .zebricek td { padding: 11px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-.zebricek th { color: var(--text-muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; }
+.zebricek th { color: var(--text-muted); font-size: .95rem; text-transform: uppercase; letter-spacing: .05em; }
 .zebricek td.poradi { width: 56px; font-weight: 800; color: var(--text-muted); }
 .zebricek td.body { text-align: right; font-weight: 800; color: var(--accent); white-space: nowrap; }
 .zebricek td.kdy { text-align: right; color: var(--text-muted); font-size: .85em; white-space: nowrap; }
@@ -660,7 +661,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.35</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.38</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -696,14 +697,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.35
+   30 s Verčou - (c) 2026 KeCl v1.38
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.35',
+  APP_VERSION: 'v1.38',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -719,14 +720,14 @@ const CONFIG = {
   hudba: 'assets/hudba.mp3',
 
   // Bezešvější varianta téže smyčky pro prohlížeče, které umí Ogg Vorbis
-  // (Chrome, Firefox) — MP3 má na začátku a konci krátké ticho od kodéru.
+  // (Chrome, Firefox) - MP3 má na začátku a konci krátké ticho od kodéru.
   hudbaOgg: 'assets/hudba.ogg',
 
-  // Přesná délka smyčky v sekundách (podle připraveného souboru) — používá
+  // Přesná délka smyčky v sekundách (podle připraveného souboru) - používá
   // se pro bezešvé opakování přes Web Audio.
   delkaSmycky: 52.369524,
 
-  // Krátké ticho přehrané přes <audio> — na iPhonu tím přepneme zvukovou
+  // Krátké ticho přehrané přes <audio> - na iPhonu tím přepneme zvukovou
   // relaci, jinak přepínač vyzvánění ztlumí i Web Audio.
   ticho: 'assets/ticho.mp3',
   hlasitost: 0.20,
@@ -735,7 +736,8 @@ const CONFIG = {
   resetHash: 667534615,
 
   // Počítadlo návštěv (zdarma, bez registrace)
-  pocitadloURL: 'https://abacus.jasoncameron.dev/hit/verca30-kecl/navstevy',
+  // Ostré počítadlo pro zveřejněnou verzi - nový klíč = start od nuly (v1.38).
+  pocitadloURL: 'https://abacus.jasoncameron.dev/hit/verca30-kecl/navstevy-ostra',
 
   // SPOLEČNÝ ŽEBŘÍČEK PRO VŠECHNY NÁVŠTĚVNÍKY (Firebase Realtime Database).
   // Každý výsledek se přidává samostatným POSTem, takže se dva hráči, kteří
@@ -745,40 +747,40 @@ const CONFIG = {
 };
 
 /* ============================================================
-   ▼▼▼  OBSAH — 30 FOTEK A 30 OTÁZEK  ▼▼▼
+   ▼▼▼  OBSAH - 30 FOTEK A 30 OTÁZEK  ▼▼▼
 
    Každý záznam:
-     foto     – název souboru ve složce assets/fotky/
-     otazka   – znění otázky
-     moznosti – přesně 4 možnosti (pořadí je jedno, hra je stejně zamíchá)
-     spravne  – SPRÁVNÁ ODPOVĚĎ NAPSANÁ TEXTEM, přesně tak, jak je v „moznosti“
+     foto     - název souboru ve složce assets/fotky/
+     otazka   - znění otázky
+     moznosti - přesně 4 možnosti (pořadí je jedno, hra je stejně zamíchá)
+     spravne  - SPRÁVNÁ ODPOVĚĎ NAPSANÁ TEXTEM, přesně tak, jak je v „moznosti“
                 (např. spravne:'hodná'). Velká/malá písmena ani mezery na krajích
-                nevadí. Číslo (0–3) taky pořád funguje, ale text je bezpečnější.
-     rodinna  – (nepovinné) rodinna:true → nad otázkou se ukáže odznak
+                nevadí. Číslo (0-3) taky pořád funguje, ale text je bezpečnější.
+     rodinna  - (nepovinné) rodinna:true → nad otázkou se ukáže odznak
                 „Rodinná otázka“ a pod odpověďmi vysvětlivka
                 „* správná odpověď je většinový názor rodiny :-)“
-     komentar – (nepovinné) věta, která se ukáže po odpovědi
+     komentar - (nepovinné) věta, která se ukáže po odpovědi
 
-   POZOR: možnosti A–D se každému hráči zamíchají znovu a jinak, takže
-   „správná je béčko“ neplatí — proto se správná odpověď píše textem.
+   POZOR: možnosti A-D se každému hráči zamíchají znovu a jinak, takže
+   „správná je béčko“ neplatí - proto se správná odpověď píše textem.
    ============================================================ */
 const OTAZKY = [
   { foto:'01.jpg', otazka:'Co má Verunka na krku?', moznosti:['mateřské znamínko','dalekohled','krasohled','dalekopohled'], spravne:'dalekopohled', komentar:'Jasně že dalekopohled, tak tomu Verča vždycky říkala 🔭' },
   { foto:'02.jpg', otazka:'Ve které zemi byla Verča tentokrát?', moznosti:['Borneo','Šrí Lanka','Mauricius','Austrálie'], spravne:'Austrálie', komentar:'No jasně, to je přece letošní fotka ze země klokanů 🦘' },
-  { foto:'03.jpg', otazka:'Kolik roků tenkrát Verunka slavila?', moznosti:['15','14','17','16'], spravne:'15', komentar:'Byly to dvoje kulatiny — babička slavila 70 a Verunka 15 🎂' },
+  { foto:'03.jpg', otazka:'Kolik roků tenkrát Verunka slavila?', moznosti:['15','14','17','16'], spravne:'15', komentar:'Byly to dvoje kulatiny - babička slavila 70 a Verunka 15 🎂' },
   { foto:'04.jpg', otazka:'Ve které zemi se Verča tak hezky usmívá?', moznosti:['Mauricius','Panama','Šrí Lanka','Madagaskar'], spravne:'Mauricius', komentar:'Ano, to je přece typický úsměv na Mauriciu 😄' },
   { foto:'05.jpg', otazka:'Na kterém zvířeti to malá Verča jede?', moznosti:['kráva','býk','prase','zubr'], spravne:'kráva', komentar:'Jde vidět, že jsi ve škole dával(a) pozor 🐄' },
   { foto:'06.jpg', otazka:'Kolik roků bylo Verunce v době konání této „kraví" akce CowParade?', moznosti:['6','7','8','9'], spravne:'7', komentar:'Ano, Verča měla v době fotky krásných šťastných 7 🍀' },
   { foto:'07.jpg', otazka:'Tady šly holky spolu na maškarní za houby. Jakou další společnou masku holky měly?', moznosti:['mrkve','princezny','Ferdy mravence','loupežníky'], spravne:'mrkve', komentar:'Ano, svěží zrak je přece na prvním místě 🥕' },
-  { foto:'08.jpg', otazka:'Co Verča dělá s nádobkou, kterou drží?', moznosti:['rýžuje zlato','proplachuje zeleninu','myje nádobí','dělá keramiku'], spravne:'rýžuje zlato', komentar:'Peněz není nikdy dost – takže ať žije zlato 💰' },
-  { foto:'09.jpg', otazka:'Kolikátý měsíc dvojčátek sestřenice a bratrance si Verunka užívá?', moznosti:['8.','9.','10.','11.'], spravne:'10.', komentar:'Jo, jo – letí to jako voda 👧👦' },
-  { foto:'10.jpg', otazka:'Kde se to Verča navzájem hypnotizuje s rybou?', moznosti:['aquapark na Rhodosu','plavecký bazén v Ostravě','Rybí dům v Chotěbuzi','plovárna v Brně'], spravne:'aquapark na Rhodosu', komentar:'Rhodos je z těch míst nejlákavější – takže správně 🐠' },
+  { foto:'08.jpg', otazka:'Co Verča dělá s nádobkou, kterou drží?', moznosti:['rýžuje zlato','proplachuje zeleninu','myje nádobí','dělá keramiku'], spravne:'rýžuje zlato', komentar:'Peněz není nikdy dost - takže ať žije zlato 💰' },
+  { foto:'09.jpg', otazka:'Kolikátý měsíc dvojčátek sestřenice a bratrance si Verunka užívá?', moznosti:['8.','9.','10.','11.'], spravne:'10.', komentar:'Jo, jo - letí to jako voda 👧👦' },
+  { foto:'10.jpg', otazka:'Kde se to Verča navzájem hypnotizuje s rybou?', moznosti:['aquapark na Rhodosu','plavecký bazén v Ostravě','Rybí dům v Chotěbuzi','plovárna v Brně'], spravne:'aquapark na Rhodosu', komentar:'Rhodos je z těch míst nejlákavější - takže správně 🐠' },
   { foto:'11.jpg', otazka:'Kde to spolu Verča s Agi vítají východ slunce?', moznosti:['Mallorca','Rhodos','Korfu','Thassos'], spravne:'Mallorca', komentar:'Ano, stejně jako malý Rafael Nadal 🎾' },
   { foto:'12.jpg', otazka:'V jaké řece se Verča koupe?', moznosti:['Vrbas (Banja Luka)','Olše (Český Těšín)','Olše (polský Těšín)','Ostravice (Vratimov)'], spravne:'Vrbas (Banja Luka)', komentar:'Koupání pod vrbami je určitě nejlepší v řece Vrbas 🌳' },
   { foto:'13.jpg', otazka:'Na co to sestřičky valí oči?', moznosti:['na vodu z Mariina pramene','na drobný hmyz v lahvích','na Mirdžu, jak „zaběhla za strom"','na krásy lahví Dobré vody'], spravne:'na vodu z Mariina pramene', komentar:'Mattoni už není… 💧' },
   { foto:'14.jpg', otazka:'Do jakých hor si udělaly turistky výlet?', moznosti:['Jeseníky','Beskydy','Krkonoše','Jizerské hory'], spravne:'Jeseníky', komentar:'Není vysílač jako vysílač… 📡' },
-  { foto:'15.jpg', otazka:'Ze kterého roku je tato fotka ze Střílek?', moznosti:['2013','2014','2015','2016'], spravne:'2014', komentar:'Ano, v roce 2014 – to jsme byli všichni mladí a krásní 😂' },
-  { foto:'16.jpg', otazka:'Tady byla Verunka poprvé u moře – kde to bylo?', moznosti:['Itálie','Bulharsko','Řecko','Chorvatsko'], spravne:'Itálie', komentar:'Sladká Itálie – moříčko, macaroni, pizza – paráda 🌊' },
+  { foto:'15.jpg', otazka:'Ze kterého roku je tato fotka ze Střílek?', moznosti:['2013','2014','2015','2016'], spravne:'2014', komentar:'Ano, v roce 2014 - to jsme byli všichni mladí a krásní 😂' },
+  { foto:'16.jpg', otazka:'Tady byla Verunka poprvé u moře - kde to bylo?', moznosti:['Itálie','Bulharsko','Řecko','Chorvatsko'], spravne:'Itálie', komentar:'Sladká Itálie - moříčko, macaroni, pizza - paráda 🌊' },
   { foto:'17.jpg', otazka:'Kde si Verča užívala zimní radovánky?', moznosti:['Kouty nad Desnou','Morávka','Karlov','Červenohorské sedlo'], spravne:'Kouty nad Desnou', komentar:'Někdo má kouty ve vlasech a někdo tam lyžuje ⛷️' },
   { foto:'18.jpg', otazka:'Který zámek poctily holky svou návštěvou?', moznosti:['Branná','Velké Losiny','Bečov nad Teplou','Frýdlant'], spravne:'Branná', komentar:'3 zámecké paní na zámeckém vinoBranní 🏰' },
   { foto:'19.jpg', otazka:'Romantické pózování na pobřeží moře se událo kde?', moznosti:['Thassos','Rhodos','Mallorca','Korfu'], spravne:'Thassos', komentar:'Kdo se má v těch řeckých ostrovech vyznat 🤪' },
@@ -786,12 +788,12 @@ const OTAZKY = [
   { foto:'21.jpg', otazka:'Jaké první slovo se rodině vybaví, když si vzpomene na Verču?', moznosti:['milá','žabička','úsměvavá','kniha'], spravne:'milá', rodinna:true, komentar:'Sešly se nám samé hezké odpovědi a vyhrála prostě milá 😊' },
   { foto:'22.jpg', otazka:'Na jaké nejoblíbenější Verunčině hračce se rodina nejvíc shodla?', moznosti:['panenka','plyšový krtek','tahací kačer','provázek'], spravne:'panenka', rodinna:true, komentar:'Sice vyhrála panenka, ale provázek jí šlapal na paty 📿' },
   { foto:'23.jpg', otazka:'Kolik knih podle rodiny Verunka doposud přečetla?', moznosti:['cca 100','cca 250','cca 500','přes 600'], spravne:'cca 250', rodinna:true, komentar:'Nejskromnější tipoval padesát, nejodvážnější šest a půl stovky 📚' },
-  { foto:'24.jpg', otazka:'Kolik fotek podle rodiny Verča udělá za jednu dovolenou?', moznosti:['cca 100','cca 300','cca 1000','přes 3000'], spravne:'cca 300', rodinna:true, komentar:'Rodina se rozdělila na tábor „pár stovek" a tábor „tisíce" – pravda bude někde uprostřed 📸' },
-  { foto:'25.jpg', otazka:'Jakého domácího mazlíčka měla podle rodiny Verunka doma nejčastěji?', moznosti:['křečka','morče','králíka','rybičky'], spravne:'křečka', rodinna:true, komentar:'Jednohlasně! Všichni napsali křečka — to se jen tak nevidí 🐹' },
-  { foto:'26.jpg', otazka:'Kdyby Verča byla zvířetem, které by to podle rodiny NEBYLO?', moznosti:['kapybara','fretka','sova','lasička'], spravne:'lasička', rodinna:true, komentar:'Tady měla rodina bujnou fantazii a co člověk – to jiné zvíře 🐶' },
+  { foto:'24.jpg', otazka:'Kolik fotek podle rodiny Verča udělá za jednu dovolenou?', moznosti:['cca 100','cca 300','cca 1000','přes 3000'], spravne:'cca 300', rodinna:true, komentar:'Rodina se rozdělila na tábor „pár stovek" a tábor „tisíce" - pravda bude někde uprostřed 📸' },
+  { foto:'25.jpg', otazka:'Jakého domácího mazlíčka měla podle rodiny Verunka doma nejčastěji?', moznosti:['křečka','morče','králíka','rybičky'], spravne:'křečka', rodinna:true, komentar:'Jednohlasně! Všichni napsali křečka - to se jen tak nevidí 🐹' },
+  { foto:'26.jpg', otazka:'Kdyby Verča byla zvířetem, které by to podle rodiny NEBYLO?', moznosti:['kapybara','fretka','sova','lasička'], spravne:'lasička', rodinna:true, komentar:'Tady měla rodina bujnou fantazii a co člověk - to jiné zvíře 🐶' },
   { foto:'27.jpg', otazka:'Jaký filmový žánr má podle rodiny Verča nejraději?', moznosti:['komedie','fantasy','dokumenty','horory'], spravne:'komedie', rodinna:true, komentar:'Komedie o hlas. Fantasy a naučné skončily těsně za ní 🎬' },
-  { foto:'28.jpg', otazka:'Kolik let je podle rodiny Verča v Brně?', moznosti:['7','8','10','12'], spravne:'10', rodinna:true, komentar:'Deset let – odhady rodiny šly od sedmi do dvanácti, tak jsme to vzali středem 🏙️' },
-  { foto:'29.jpg', otazka:'Kolik zemí podle rodiny Verča navštívila?', moznosti:['20','25','30','35'], spravne:'30', rodinna:true, komentar:'Třicítka k třicátinám – a rodina se trefila docela do sebe 🌍' },
+  { foto:'28.jpg', otazka:'Kolik let je podle rodiny Verča v Brně?', moznosti:['7','8','10','12'], spravne:'10', rodinna:true, komentar:'Deset let - odhady rodiny šly od sedmi do dvanácti, tak jsme to vzali středem 🏙️' },
+  { foto:'29.jpg', otazka:'Kolik zemí podle rodiny Verča navštívila?', moznosti:['20','25','30','35'], spravne:'30', rodinna:true, komentar:'Třicítka k třicátinám - a rodina se trefila docela do sebe 🌍' },
   { foto:'30.jpg', otazka:'Co podle rodiny Verča nikdy nezapomene sbalit na cesty?', moznosti:['doklady','knihu','opalovací krém','toaleťák'], spravne:'doklady', rodinna:true, komentar:'Nejdůležitější jsou doklady (ale co ten toaleťák… 🧻)' }
 ];
 
@@ -833,7 +835,7 @@ const HLASKY_CHYBA = [
 /* Emoji na rubu okének (30 různých) */
 const EMOJI = ['🎂','🎈','🎁','🎉','🥳','🍰','🎊','✨','🎀','🍾','🥂','💐','🌟','💖','🎵','🧁','🎯','🍭','🌈','🦄','💃','📸','🕯️','🎪','🍀','😍','🔥','👑','🎠','🌸'];
 
-/* Víčka — samolepky Verči (průhledné PNG) na lícové straně okének.
+/* Víčka - samolepky Verči (průhledné PNG) na lícové straně okének.
    Leží v assets/vicka/. Až přibydou další, stačí je sem dopsat;
    kde víčko chybí, ukáže se neutrální placeholder. */
 const VICKA = ['01.png','02.png','03.png','04.png','05.png','06.png','07.png','08.png',
@@ -865,7 +867,7 @@ function hashText(s) {
   return h;
 }
 
-/* Index správné možnosti. `spravne` smí být číslo (0–3) NEBO přímo text
+/* Index správné možnosti. `spravne` smí být číslo (0-3) NEBO přímo text
    správné odpovědi; text se dohledá v poli `moznosti` (bez ohledu na velikost
    písmen a mezery na krajích). Když se text nenajde, bere se první možnost
    a do konzole jde varování. */
@@ -880,7 +882,7 @@ function spravnyIndex(q) {
   return i;
 }
 
-/* Náhodné pořadí možností A–D pro každou otázku (pro jednu hru/hráče) */
+/* Náhodné pořadí možností A-D pro každou otázku (pro jednu hru/hráče) */
 function zamichejMoznosti() {
   return OTAZKY.map(q => zamichej(q.moznosti.map((_, i) => i)));
 }
@@ -932,7 +934,7 @@ function nahradniFoto(poradi, emoji) {
 }
 
 /* ============================================================
-   STAV HRY  (drží se v sessionStorage — přežije refresh v témže okně)
+   STAV HRY  (drží se v sessionStorage - přežije refresh v témže okně)
    ============================================================ */
 const KLIC_STAV = 'verca30-stav';
 const KLIC_ZEBRICEK = 'verca30-zebricek';
@@ -983,6 +985,11 @@ function scena(jmeno) {
   ['sceneUvod', 'sceneHra', 'sceneKonec'].forEach(id => {
     $(id).classList.toggle('aktivni', id === jmeno);
   });
+  // Údaje v záhlaví (skóre, Vzdávám, Žebříček) patří jen do rozehrané hry
+  // a na závěrečnou obrazovku - na úvodní obrazovce nemají co dělat.
+  const vHre = (jmeno === 'sceneHra' || jmeno === 'sceneKonec');
+  $('skoreBox').style.display = (vHre && stav) ? '' : 'none';
+  $('vzdatBtn').style.display = (jmeno === 'sceneHra' && stav && !stav.hotovo) ? '' : 'none';
   // Po dohrané hře se dá z prohlížení fotek vrátit na žebříček
   $('zebricekBtn').style.display = (jmeno === 'sceneHra' && stav && stav.hotovo) ? '' : 'none';
   requestAnimationFrame(srovnejHlavicku);
@@ -1007,7 +1014,7 @@ function vykresliMrizku() {
     btn.type = 'button';
     btn.dataset.idx = idx;
     btn.dataset.pozice = pozice;
-    btn.setAttribute('aria-label', zodpovezeno ? 'Zodpovězené okénko – zobrazit fotku' : 'Neotevřené okénko');
+    btn.setAttribute('aria-label', zodpovezeno ? 'Zodpovězené okénko - zobrazit fotku' : 'Neotevřené okénko');
 
     const inner = document.createElement('span');
     inner.className = 'okenko-inner';
@@ -1084,9 +1091,11 @@ let vzdatKlik = 0;
 function aktualizujSkore() {
   $('pocetOtevrenych').textContent = pocetZodpovezenych();
   $('pocetBodu').textContent = stav.body;
-  $('skoreBox').style.display = '';
-  $('vzdatBtn').style.display = stav.hotovo ? 'none' : '';
-  $('zebricekBtn').style.display = stav.hotovo ? '' : 'none';
+  // Na úvodní obrazovce zůstává lišta schovaná (scena() ji pak nastaví načisto).
+  const uvod = $('sceneUvod').classList.contains('aktivni');
+  $('skoreBox').style.display = uvod ? 'none' : '';
+  $('vzdatBtn').style.display = (uvod || stav.hotovo) ? 'none' : '';
+  $('zebricekBtn').style.display = (!uvod && stav.hotovo) ? '' : 'none';
 }
 
 function klikNaOkenko(idx, pozice) {
@@ -1121,7 +1130,7 @@ function otevriKartu(idx, pozice) {
   const box = $('kartaOdpovedi');
   box.innerHTML = '';
   const pismena = ['A', 'B', 'C', 'D'];
-  // Pořadí možností je pro každou hru jiné — pod písmenem A tedy pokaždé sedí
+  // Pořadí možností je pro každou hru jiné - pod písmenem A tedy pokaždé sedí
   // něco jiného. `orig` je původní index v q.moznosti, s ním se pracuje dál.
   const poradi = (stav.poradiMoznosti && stav.poradiMoznosti[idx]) || q.moznosti.map((_, i) => i);
   poradi.forEach((orig, i) => {
@@ -1160,7 +1169,7 @@ function odpovez(idx, volba) {
   if (spravne) {
     stav.body++;
   } else {
-    // Hlášky se berou popořadě ze zamíchaného seznamu — bez opakování.
+    // Hlášky se berou popořadě ze zamíchaného seznamu - bez opakování.
     const poradiHlasek = (Array.isArray(stav.hlasky) && stav.hlasky.length)
       ? stav.hlasky : zamichej(HLASKY_CHYBA.map((_, i) => i));
     hlaskaChyby = HLASKY_CHYBA[poradiHlasek[(stav.chyby || 0) % poradiHlasek.length]];
@@ -1168,7 +1177,7 @@ function odpovez(idx, volba) {
   }
   ulozStav();
 
-  // Označí se pouze zvolená možnost — správná odpověď se neprozrazuje,
+  // Označí se pouze zvolená možnost - správná odpověď se neprozrazuje,
   // aby mělo smysl hrát znovu a zlepšovat si skóre.
   const tlacitka = $('kartaOdpovedi').querySelectorAll('.odpoved');
   tlacitka.forEach((b) => {
@@ -1192,7 +1201,7 @@ function odpovez(idx, volba) {
   const btn = $('mrizka').querySelector('.okenko[data-idx="' + idx + '"]');
   if (btn) {
     btn.classList.add('otoceno');
-    btn.setAttribute('aria-label', 'Zodpovězené okénko – zobrazit fotku');
+    btn.setAttribute('aria-label', 'Zodpovězené okénko - zobrazit fotku');
     const back = btn.querySelector('.face-back');
     if (back && !back.querySelector('.znacka')) {
       const zn = document.createElement('span');
@@ -1230,13 +1239,13 @@ function zavriLightbox() {
 /* ============================================================
    ZÁVĚR + ŽEBŘÍČEK
    ============================================================ */
-/* Hlášky pro 11. místo a dál — vybírá se náhodně. Klidně si je přepiš. */
+/* Hlášky pro 11. místo a dál - vybírá se náhodně. Klidně si je přepiš. */
 const HLASKY_DALE = [
-  '🫧 Body nejsou všechno — hlavní je, že jsi tu dnes s ' + CONFIG.oslavenkyneSKym + '.',
+  '🫧 Body nejsou všechno - hlavní je, že jsi tu dnes s ' + CONFIG.oslavenkyneSKym + '.',
   '📚 Tohle chce ještě jeden společný večer, příště to bude lepší.',
   '🧠 Paměť je zrádná věc. Srdce ale ví svoje.',
   '🐢 Pomalu, ale jistě. Do desítky se příště doplazíš.',
-  '🎯 Uhodnout ' + CONFIG.oslavenkyneKoho + ' není jen tak — klobouk dolů za pokus!',
+  '🎯 Uhodnout ' + CONFIG.oslavenkyneKoho + ' není jen tak - klobouk dolů za pokus!',
   '🍰 Za účast dort, za vědomosti až příště.',
   '🙃 Žebříček je jen číslo. Dárek snad zaboduje víc.',
   '🔍 Detektivem roku to nebude, ale zábava to byla.',
@@ -1250,8 +1259,8 @@ function hlaskaPodlePoradi(poradi, body, celkem) {
   let t;
   if (poradi === 1)      t = '🥇 VÍTĚZSTVÍ! Nikdo zatím nezná ' + CONFIG.oslavenkyneKoho + ' líp než ty. Smekáme!';
   else if (poradi === 2) t = '🥈 Stříbro! O fous za vítězem a vysoko nad všemi ostatními.';
-  else if (poradi === 3) t = '🥉 Bronz! Bedna je bedna — gratulujeme!';
-  else if (poradi <= 5)  t = '🏅 ' + poradi + '. místo — bedna utekla jen o kousek. Skvělý výsledek!';
+  else if (poradi === 3) t = '🥉 Bronz! Bedna je bedna - gratulujeme!';
+  else if (poradi <= 5)  t = '🏅 ' + poradi + '. místo - bedna utekla jen o kousek. Skvělý výsledek!';
   else if (poradi <= 10) t = '💪 ' + poradi + '. místo, tedy krásná top desítka. Pěkná práce!';
   else if (poradi > 10)  t = HLASKY_DALE[Math.floor(Math.random() * HLASKY_DALE.length)];
   else                   t = '🎉 Hotovo! Výsledek je zapsaný v žebříčku.';
@@ -1260,7 +1269,7 @@ function hlaskaPodlePoradi(poradi, body, celkem) {
 }
 
 async function dokoncit(vzdal) {
-  // vzdal = hráč skončil předčasně tlačítkem „Vzdávám to" — hra se uzavře
+  // vzdal = hráč skončil předčasně tlačítkem „Vzdávám to" - hra se uzavře
   // a výsledek jde do žebříčku stejně, ale bez konfet (není co slavit).
   stav.hotovo = true;
   ulozStav();
@@ -1272,7 +1281,7 @@ async function dokoncit(vzdal) {
   $('konecIkona').textContent = vzdal ? '🏳️' : '🏆';
   $('konecJmeno').textContent = stav.jmeno + (vzdal ? ', tak zase někdy příště!' : ', máš hotovo!');
   $('konecBody').textContent = stav.body;
-  // Po vzdání body neukazujeme — do žebříčku se stejně nepočítají.
+  // Po vzdání body neukazujeme - do žebříčku se stejně nepočítají.
   $('konecSkore').style.display = vzdal ? 'none' : '';
   // U nedokončené hry rovnou vysvětlíme, proč nejde do žebříčku.
   $('konecHodnoceni').textContent = kompletni ? '' : '🏳️ Nedokončený kvíz se do žebříčku nezapisuje.';
@@ -1370,7 +1379,7 @@ async function vykresliZebricek(mujZaznam) {
   data.sort((x, y) => (y.body - x.body) || (new Date(x.kdy) - new Date(y.kdy)));
 
   if (!data.length) {
-    telo.innerHTML = '<tr><td colspan="4" class="prazdno">Zatím tu nikdo není — buď první! 🎈</td></tr>';
+    telo.innerHTML = '<tr><td colspan="4" class="prazdno">Zatím tu nikdo není - buď první! 🎈</td></tr>';
     return 0;
   }
 
@@ -1429,7 +1438,7 @@ function pocitadlo() {
   fetch(CONFIG.pocitadloURL, { signal: ctrl.signal })
     .then(r => r.json())
     .then(d => { if (d && typeof d.value === 'number') $('pocitadlo').textContent = d.value; })
-    .catch(() => { $('pocitadlo').textContent = '–'; })
+    .catch(() => { $('pocitadlo').textContent = '-'; })
     .finally(() => clearTimeout(t));
 }
 
@@ -1440,7 +1449,7 @@ const audio = $('hudba');
 let hudbaZapnuta = true;
 
 /* Ikony reproduktoru (2D, kreslené) */
-/* Vlaječka pro „Vzdávám to" — kreslená, aby držela barvu textu */
+/* Vlaječka pro „Vzdávám to" - kreslená, aby držela barvu textu */
 const IKONA_VLAJKA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 21V3.6"/><path d="M6.9 4.7c3.1-1.7 5.9 1.1 9-.5v7.9c-3.1 1.6-5.9-1.2-9 .5z" fill="currentColor" stroke="none"/></svg>';
 function popisekVzdat(text) { return IKONA_VLAJKA + '<span>' + text + '</span>'; }
 
@@ -1479,7 +1488,7 @@ function b64naBuffer(b64) {
 const AC = window.AudioContext || window.webkitAudioContext;
 const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
 
-/* Dekódování běží hned po načtení stránky v offline kontextu — ten nepotřebuje
+/* Dekódování běží hned po načtení stránky v offline kontextu - ten nepotřebuje
    uživatelské gesto (na iOS by se běžný AudioContext založený mimo gesto
    nerozjel). */
 async function pripravWebAudio() {
@@ -1528,12 +1537,12 @@ function zapniKontext() {
   } catch (e) { ac = null; return false; }
 }
 
-/* iOS občas povolí zvuk až při dalším doteku — zkusíme to znovu. */
+/* iOS občas povolí zvuk až při dalším doteku - zkusíme to znovu. */
 function zkusPriDalsimDoteku() {
   document.addEventListener('pointerdown', () => { spustHudbu(); }, { once: true, passive: true });
 }
 
-/* Dekodér MP3 přidá na začátek pár milisekund ticha — najdeme první zvuk
+/* Dekodér MP3 přidá na začátek pár milisekund ticha - najdeme první zvuk
    a smyčku vedeme přesně od něj po CONFIG.delkaSmycky sekund. */
 function zacatekZvuku(buf) {
   const d = buf.getChannelData(0);
@@ -1569,7 +1578,7 @@ function pripravHudbu() {
   audio.addEventListener('error', () => { if (!acBuffer) $('hudbaBtn').style.display = 'none'; }, { once: true });
   audio.addEventListener('canplay', () => { $('hudbaBtn').style.display = ''; }, { once: true });
   pripravWebAudio().then(ok => { if (ok) $('hudbaBtn').style.display = ''; });
-  // Na mobilu se kontext probouzí dotekem — po prvním doteku to zkusíme znovu.
+  // Na mobilu se kontext probouzí dotekem - po prvním doteku to zkusíme znovu.
 }
 
 function spustHudbu() {
@@ -1585,7 +1594,7 @@ function spustHudbu() {
 }
 
 /* Záloha: obyčejný <audio loop>. Má na spoji smyčky kratičkou pauzu, ale hraje
-   všude — včetně iPhonu, kde se Web Audio nemusí rozjet. */
+   všude - včetně iPhonu, kde se Web Audio nemusí rozjet. */
 function prehrajZalohu() {
   audio.play().then(() => { $('hudbaBtn').style.display = ''; }).catch(() => zkusPriDalsimDoteku());
 }
@@ -1740,17 +1749,24 @@ function obnovHru(s) {
   $('pozdrav').textContent = 'Vítej zpátky, ' + stav.jmeno + '! 👋';
   vykresliMrizku();
   if (stav.hotovo) {
-    $('konecJmeno').textContent = stav.jmeno + ', máš hotovo!';
+    // Pozn.: dřív se tu volala neexistující funkce hodnoceni() - chyba shodila
+    // obnovu hry a nechala viset úvodní obrazovku se zapnutými údaji v liště.
+    const kompletni = pocetZodpovezenych() === OTAZKY.length;
+    $('konecIkona').textContent = kompletni ? '🏆' : '🏳️';
+    $('konecJmeno').textContent = stav.jmeno + (kompletni ? ', máš hotovo!' : ', tak zase někdy příště!');
     $('konecBody').textContent = stav.body;
-    $('konecHodnoceni').textContent = hodnoceni(stav.body, OTAZKY.length);
+    $('konecSkore').style.display = kompletni ? '' : 'none';
+    $('konecHodnoceni').textContent = kompletni ? '' : '🏳️ Nedokončený kvíz se do žebříčku nezapisuje.';
     scena('sceneKonec');
-    vykresliZebricek();
+    Promise.resolve(vykresliZebricek()).then(poradi => {
+      if (kompletni) $('konecHodnoceni').textContent = hlaskaPodlePoradi(poradi, stav.body, OTAZKY.length);
+    }).catch(() => {});
   } else {
     scena('sceneHra');
   }
 }
 
-/* Diagnostika zvuku — otevři appku s ?zvuk=1 na konci adresy. */
+/* Diagnostika zvuku - otevři appku s ?zvuk=1 na konci adresy. */
 function zvukDiagnostika() {
   if (!/[?&]zvuk=1/.test(location.search)) return;
   const d = document.createElement('div');
@@ -1823,7 +1839,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // hudba
   $('hudbaBtn').addEventListener('click', prepniHudbu);
 
-  // Vzdávám to — druhé kliknutí do 4 s potvrdí
+  // Vzdávám to - druhé kliknutí do 4 s potvrdí
   $('vzdatBtn').addEventListener('click', () => {
     if (!stav || stav.hotovo) return;
     const b = $('vzdatBtn');
