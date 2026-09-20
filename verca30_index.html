@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.16
+   30 s Verčou — (c) 2026 KeCl v1.25
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -235,7 +235,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 .hra-hlavicka p { margin: 0; color: var(--text-muted); font-size: clamp(.92rem, 2vw, 1.05rem); }
 .mrizka {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: clamp(7px, 1.1vw, 15px);
   max-width: 1500px;
   margin: 0 auto;
@@ -243,7 +243,13 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 /* Na širokých displejích se celá deska vejde na jednu obrazovku bez rolování:
    šířka mřížky je odvozená od dostupné výšky (okénka jsou na šířku 4:3 jako fotky). */
 @media (min-width: 1151px) {
-  .mrizka { --pomer: 4 / 3; max-width: min(1600px, max(700px, calc((100svh - 240px) * 1.6))); }
+  /* v1.21: 6 sloupců × 5 řádků, mřížka téměř přes celou šířku okna.
+     Ladicí šrouby:
+       – počet sloupců: repeat(6, 1fr)  (5 sloupců = 5×6 místo 6×5)
+       – šířka: 94vw = „skoro celá obrazovka"; strop 2000px kvůli ultrawide
+     Kdyby bylo potřeba zase odvozovat od výšky okna (fit na N řad), vrať
+     max-width: calc((100svh - 240px) * K), K = 2,16 (3 řady) / 1,62 (4) / 1,30 (5). */
+  .mrizka { --pomer: 4 / 3; grid-template-columns: repeat(6, 1fr); max-width: min(2000px, 94vw); }
 }
 @media (min-width: 761px) and (max-width: 1150px) {
   .mrizka { --pomer: 4 / 3; grid-template-columns: repeat(5, 1fr); max-width: max(560px, calc((100svh - 240px) * 1.11)); }
@@ -330,7 +336,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 .karta-box {
   background: var(--surface);
   border-radius: 24px;
-  width: min(1200px, 100%);
+  width: min(1320px, 100%);
   max-height: 94svh;
   overflow: auto;
   box-shadow: var(--shadow-lg);
@@ -368,6 +374,17 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 }
 
 .karta-kviz { padding: clamp(18px, 2.6vw, 34px); display: flex; flex-direction: column; justify-content: center; }
+/* Rodinná otázka — výrazný tag vlevo nad otázkou a vysvětlivka pod odpověďmi */
+.rodinna-odznak {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 0 0 14px; padding: 8px 16px; border-radius: 999px;
+  font-size: calc(clamp(.92rem, 1.5vw, 1.05rem) + var(--kviz-plus));
+  font-weight: 800; letter-spacing: .03em; text-transform: uppercase;
+  background: linear-gradient(135deg,#ff9a9e,#fad0c4); color: #7a2d3f;
+  box-shadow: 0 3px 10px rgba(0,0,0,.14);
+}
+.rodinna-pozn { margin: 10px 0 0; font-size: calc(clamp(.9rem, 1.4vw, 1rem) + var(--kviz-plus)); line-height: 1.4; font-style: italic; color: var(--text-muted); }
 .karta-otazka { margin: 0 0 20px; font-size: calc(clamp(1.15rem, 2.3vw, 1.7rem) + var(--kviz-plus)); line-height: 1.3; }
 .odpovedi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 @media (max-width: 1100px) { .odpovedi { grid-template-columns: 1fr; } }
@@ -402,7 +419,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 .vysledek-radek {
   margin-top: 18px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   border-radius: 16px;
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -410,7 +427,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
   display: none;
 }
 .vysledek-radek.aktivni { display: block; animation: vstup .3s ease both; }
-.vysledek-radek .hlavni { font-weight: 800; font-size: 1.1em; display: block; margin-bottom: 4px; }
+.vysledek-radek .hlavni { font-weight: 700; font-size: .92em; line-height: 1.25; display: block; margin-bottom: 10px; }
 .vysledek-radek.ok .hlavni  { color: var(--ok); }
 .vysledek-radek.bad .hlavni { color: var(--bad); }
 .karta-paticka { margin-top: 18px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
@@ -623,7 +640,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.16</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.25</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -634,8 +651,10 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
         <img id="kartaFoto" alt="Fotka Verči" title="Klikni pro zvětšení">
       </div>
       <div class="karta-kviz">
+        <span class="rodinna-odznak" id="kartaRodinna" style="display:none">👨‍👩‍👧 Rodinná otázka</span>
         <h3 class="karta-otazka" id="kartaOtazka"></h3>
         <div class="odpovedi" id="kartaOdpovedi"></div>
+        <p class="rodinna-pozn" id="kartaRodinnaPozn" style="display:none">* na čem se shodla rodina</p>
         <div class="vysledek-radek" id="kartaVysledek"></div>
         <div class="karta-paticka">
           <button class="btn btn-hlavni" id="kartaPokracovat" type="button" style="display:none">Pokračovat ▸</button>
@@ -657,14 +676,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.16
+   30 s Verčou — (c) 2026 KeCl v1.25
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.16',
+  APP_VERSION: 'v1.25',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -711,41 +730,49 @@ const CONFIG = {
    Každý záznam:
      foto     – název souboru ve složce assets/fotky/
      otazka   – znění otázky
-     moznosti – přesně 4 možnosti
-     spravne  – index správné možnosti (0 = první, 1 = druhá, 2 = třetí, 3 = čtvrtá)
+     moznosti – přesně 4 možnosti (pořadí je jedno, hra je stejně zamíchá)
+     spravne  – SPRÁVNÁ ODPOVĚĎ NAPSANÁ TEXTEM, přesně tak, jak je v „moznosti“
+                (např. spravne:'hodná'). Velká/malá písmena ani mezery na krajích
+                nevadí. Číslo (0–3) taky pořád funguje, ale text je bezpečnější.
+     rodinna  – (nepovinné) rodinna:true → nad otázkou se ukáže odznak
+                „Rodinná otázka“ a pod odpověďmi vysvětlivka
+                „* správná odpověď je většinový názor rodiny :-)“
      komentar – (nepovinné) věta, která se ukáže po odpovědi
+
+   POZOR: možnosti A–D se každému hráči zamíchají znovu a jinak, takže
+   „správná je béčko“ neplatí — proto se správná odpověď píše textem.
    ============================================================ */
 const OTAZKY = [
-  { foto:'01.jpg', otazka:'Co má Verunka na krku?', moznosti:['mateřské znamínko','dalekohled','krasohled','dalekopohled'], spravne:3, komentar:'Jasně že dalekopohled, tak tomu Verča vždycky říkala 😄' },
-  { foto:'02.jpg', otazka:'Ve které zemi byla Verča tentokrát?', moznosti:['Borneo','Šrí Lanka','Mauricius','Austrálie'], spravne:3, komentar:'No jasně, to je přece letošní fotka ze země klokanů 🦘' },
-  { foto:'03.jpg', otazka:'Kolik roků tenkrát Verunka slavila?', moznosti:['15','14','17','16'], spravne:0, komentar:'Byly to dvoje kulatiny — babička slavila 70 a Verunka 15 🎂' },
-  { foto:'04.jpg', otazka:'Otázka č. 4 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'05.jpg', otazka:'Otázka č. 5 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'06.jpg', otazka:'Otázka č. 6 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'07.jpg', otazka:'Otázka č. 7 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'08.jpg', otazka:'Otázka č. 8 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'09.jpg', otazka:'Otázka č. 9 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'10.jpg', otazka:'Otázka č. 10 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'11.jpg', otazka:'Otázka č. 11 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'12.jpg', otazka:'Otázka č. 12 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'13.jpg', otazka:'Otázka č. 13 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'14.jpg', otazka:'Otázka č. 14 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'15.jpg', otazka:'Otázka č. 15 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'16.jpg', otazka:'Otázka č. 16 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'17.jpg', otazka:'Otázka č. 17 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'18.jpg', otazka:'Otázka č. 18 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'19.jpg', otazka:'Otázka č. 19 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'20.jpg', otazka:'Otázka č. 20 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'21.jpg', otazka:'Otázka č. 21 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'22.jpg', otazka:'Otázka č. 22 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'23.jpg', otazka:'Otázka č. 23 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'24.jpg', otazka:'Otázka č. 24 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'25.jpg', otazka:'Otázka č. 25 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'26.jpg', otazka:'Otázka č. 26 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'27.jpg', otazka:'Otázka č. 27 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'28.jpg', otazka:'Otázka č. 28 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'29.jpg', otazka:'Otázka č. 29 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' },
-  { foto:'30.jpg', otazka:'Otázka č. 30 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:0, komentar:'' }
+  { foto:'01.jpg', otazka:'Co má Verunka na krku?', moznosti:['mateřské znamínko','dalekohled','krasohled','dalekopohled'], spravne:'dalekopohled', komentar:'Jasně že dalekopohled, tak tomu Verča vždycky říkala 🔭' },
+  { foto:'02.jpg', otazka:'Ve které zemi byla Verča tentokrát?', moznosti:['Borneo','Šrí Lanka','Mauricius','Austrálie'], spravne:'Austrálie', komentar:'No jasně, to je přece letošní fotka ze země klokanů 🦘' },
+  { foto:'03.jpg', otazka:'Kolik roků tenkrát Verunka slavila?', moznosti:['15','14','17','16'], spravne:'15', komentar:'Byly to dvoje kulatiny — babička slavila 70 a Verunka 15 🎂' },
+  { foto:'04.jpg', otazka:'Ve které zemi se Verča tak hezky usmívá?', moznosti:['Mauricius','Panama','Šrí Lanka','Madagaskar'], spravne:'Mauricius', komentar:'Ano, to je přece typický úsměv na Mauriciu 😄' },
+  { foto:'05.jpg', otazka:'Na kterém zvířeti to malá Verča jede?', moznosti:['kráva','býk','prase','zubr'], spravne:'kráva', komentar:'Jde vidět, že jsi ve škole dával(a) pozor 🐄' },
+  { foto:'06.jpg', otazka:'Kolik roků bylo Verunce v době konání této „kraví" akce CowParade?', moznosti:['6','7','8','9'], spravne:'7', komentar:'Ano, Verča měla v době fotky krásných šťastných 7 🍀' },
+  { foto:'07.jpg', otazka:'Tady šly holky spolu na maškarní za houby. Jakou další společnou masku holky měly?', moznosti:['mrkve','princezny','Ferdy mravence','loupežníky'], spravne:'mrkve', komentar:'Ano, svěží zrak je přece na prvním místě 🥕' },
+  { foto:'08.jpg', otazka:'Co Verča dělá s nádobkou, kterou drží?', moznosti:['rýžuje zlato','proplachuje zeleninu','myje nádobí','dělá keramiku'], spravne:'rýžuje zlato', komentar:'Peněz není nikdy dost – takže ať žije zlato 💰' },
+  { foto:'09.jpg', otazka:'Kolikátý měsíc dvojčátek sestřenice a bratrance si Verunka užívá?', moznosti:['8.','9.','10.','11.'], spravne:'10.', komentar:'Jo, jo – letí to jako voda 👧👦' },
+  { foto:'10.jpg', otazka:'Kde se to Verča navzájem hypnotizuje s rybou?', moznosti:['aquapark na Rhodosu','plavecký bazén v Ostravě','Rybí dům v Chotěbuzi','plovárna v Brně'], spravne:'aquapark na Rhodosu', komentar:'Rhodos je z těch míst nejlákavější – takže správně 🐠' },
+  { foto:'11.jpg', otazka:'Kde to spolu Verča s Agi vítají východ slunce?', moznosti:['Mallorca','Rhodos','Korfu','Thassos'], spravne:'Mallorca', komentar:'Ano, stejně jako malý Rafael Nadal 🎾' },
+  { foto:'12.jpg', otazka:'Otázka č. 12 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'13.jpg', otazka:'Otázka č. 13 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'14.jpg', otazka:'Otázka č. 14 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'15.jpg', otazka:'Otázka č. 15 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'16.jpg', otazka:'Otázka č. 16 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'17.jpg', otazka:'Otázka č. 17 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'18.jpg', otazka:'Otázka č. 18 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'19.jpg', otazka:'Otázka č. 19 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'20.jpg', otazka:'V kolika letech podle rodiny Verunka poprvé letěla letadlem?', moznosti:['12','13','15','17'], spravne:'15', rodinna:true, komentar:'Odhady šly od dvanácti do devatenácti, dáváme tedy střed ✈️' },
+  { foto:'21.jpg', otazka:'Otázka č. 21 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'22.jpg', otazka:'Otázka č. 22 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'23.jpg', otazka:'Otázka č. 23 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'24.jpg', otazka:'Otázka č. 24 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'25.jpg', otazka:'Otázka č. 25 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'26.jpg', otazka:'Otázka č. 26 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'27.jpg', otazka:'Otázka č. 27 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'28.jpg', otazka:'Otázka č. 28 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'29.jpg', otazka:'Otázka č. 29 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'30.jpg', otazka:'Otázka č. 30 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' }
 ];
 
 /* Emoji na rubu okének (30 různých) */
@@ -781,6 +808,26 @@ function hashText(s) {
   let h = 5381;
   for (const c of String(s)) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0;
   return h;
+}
+
+/* Index správné možnosti. `spravne` smí být číslo (0–3) NEBO přímo text
+   správné odpovědi; text se dohledá v poli `moznosti` (bez ohledu na velikost
+   písmen a mezery na krajích). Když se text nenajde, bere se první možnost
+   a do konzole jde varování. */
+function spravnyIndex(q) {
+  if (typeof q.spravne === 'number') return q.spravne;
+  const hledane = String(q.spravne == null ? '' : q.spravne).trim().toLowerCase();
+  const i = q.moznosti.findIndex(m => String(m).trim().toLowerCase() === hledane);
+  if (i < 0) {
+    console.warn('Otázka „' + q.otazka + '“: správná odpověď „' + q.spravne + '“ není mezi možnostmi.');
+    return 0;
+  }
+  return i;
+}
+
+/* Náhodné pořadí možností A–D pro každou otázku (pro jednu hru/hráče) */
+function zamichejMoznosti() {
+  return OTAZKY.map(q => zamichej(q.moznosti.map((_, i) => i)));
 }
 
 function zamichej(pole) {
@@ -843,7 +890,8 @@ function novyStav(jmeno) {
     poradi: zamichej(OTAZKY.map((_, i) => i)),
     emoji: zamichej(EMOJI),
     vicka: rozmistiVicka(),
-    odpovedi: {},          // index otázky -> zvolená možnost
+    poradiMoznosti: zamichejMoznosti(),   // index otázky -> pořadí možností pro tuto hru
+    odpovedi: {},          // index otázky -> zvolená možnost (index do OTAZKY[i].moznosti)
     body: 0,
     hotovo: false,
     zapsano: false,
@@ -862,6 +910,7 @@ function nactiStav() {
     const s = JSON.parse(raw);
     if (!s || !s.jmeno || !Array.isArray(s.poradi) || s.poradi.length !== OTAZKY.length) return null;
     if (!Array.isArray(s.vicka) || s.vicka.length !== OTAZKY.length) s.vicka = rozmistiVicka();
+    if (!Array.isArray(s.poradiMoznosti) || s.poradiMoznosti.length !== OTAZKY.length) s.poradiMoznosti = zamichejMoznosti();
     return s;
   } catch (e) { return null; }
 }
@@ -892,7 +941,7 @@ function vykresliMrizku() {
     const q = OTAZKY[idx];
     const emoji = stav.emoji[pozice % stav.emoji.length];
     const zodpovezeno = Object.prototype.hasOwnProperty.call(stav.odpovedi, idx);
-    const spravne = zodpovezeno && stav.odpovedi[idx] === q.spravne;
+    const spravne = zodpovezeno && stav.odpovedi[idx] === spravnyIndex(q);
 
     const btn = document.createElement('button');
     btn.className = 'okenko' + (zodpovezeno ? ' otoceno' : '');
@@ -996,16 +1045,22 @@ function otevriKartu(idx, pozice) {
   foto.onclick = () => otevriLightbox(foto.src, idx, emoji);
 
   $('kartaOtazka').textContent = q.otazka;
+  $('kartaRodinna').style.display = q.rodinna ? '' : 'none';
+  $('kartaRodinnaPozn').style.display = q.rodinna ? '' : 'none';
 
   const box = $('kartaOdpovedi');
   box.innerHTML = '';
   const pismena = ['A', 'B', 'C', 'D'];
-  q.moznosti.forEach((m, i) => {
+  // Pořadí možností je pro každou hru jiné — pod písmenem A tedy pokaždé sedí
+  // něco jiného. `orig` je původní index v q.moznosti, s ním se pracuje dál.
+  const poradi = (stav.poradiMoznosti && stav.poradiMoznosti[idx]) || q.moznosti.map((_, i) => i);
+  poradi.forEach((orig, i) => {
     const b = document.createElement('button');
     b.className = 'odpoved';
     b.type = 'button';
-    b.innerHTML = '<span class="pismeno">' + pismena[i] + '</span><span>' + escapeHtml(m) + '</span>';
-    b.addEventListener('click', () => odpovez(idx, i));
+    b.dataset.orig = orig;
+    b.innerHTML = '<span class="pismeno">' + pismena[i] + '</span><span>' + escapeHtml(q.moznosti[orig]) + '</span>';
+    b.addEventListener('click', () => odpovez(idx, orig));
     box.appendChild(b);
   });
 
@@ -1028,7 +1083,7 @@ function zavriKartu() {
 function odpovez(idx, volba) {
   if (Object.prototype.hasOwnProperty.call(stav.odpovedi, idx)) return;
   const q = OTAZKY[idx];
-  const spravne = volba === q.spravne;
+  const spravne = volba === spravnyIndex(q);
 
   stav.odpovedi[idx] = volba;
   if (spravne) stav.body++;
@@ -1037,9 +1092,9 @@ function odpovez(idx, volba) {
   // Označí se pouze zvolená možnost — správná odpověď se neprozrazuje,
   // aby mělo smysl hrát znovu a zlepšovat si skóre.
   const tlacitka = $('kartaOdpovedi').querySelectorAll('.odpoved');
-  tlacitka.forEach((b, i) => {
+  tlacitka.forEach((b) => {
     b.disabled = true;
-    if (i === volba) b.classList.add(spravne ? 'spravne' : 'spatne');
+    if (Number(b.dataset.orig) === volba) b.classList.add(spravne ? 'spravne' : 'spatne');
     else b.classList.add('tlumene');
   });
 
