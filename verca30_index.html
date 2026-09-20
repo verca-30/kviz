@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou - (c) 2026 KeCl v1.38
+   30 s Verčou - (c) 2026 KeCl v1.39
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -509,6 +509,8 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 .zebricek { width: 100%; border-collapse: collapse; font-size: clamp(1.1rem, 2.3vw, 1.3rem); }
 .zebricek th, .zebricek td { padding: 11px 10px; text-align: left; border-bottom: 1px solid var(--border); }
 .zebricek th { color: var(--text-muted); font-size: .95rem; text-transform: uppercase; letter-spacing: .05em; }
+/* Upozornění, když se nepodaří spojit se společným žebříčkem na serveru */
+.zebricek-stav { margin: 14px 0 0; font-size: .9rem; line-height: 1.4; color: var(--bad); text-align: center; }
 .zebricek td.poradi { width: 56px; font-weight: 800; color: var(--text-muted); }
 .zebricek td.body { text-align: right; font-weight: 800; color: var(--accent); white-space: nowrap; }
 .zebricek td.kdy { text-align: right; color: var(--text-muted); font-size: .85em; white-space: nowrap; }
@@ -645,10 +647,11 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
             <tr><td colspan="4" class="prazdno">Načítám…</td></tr>
           </tbody>
         </table>
+        <p class="zebricek-stav" id="zebricekStav" style="display:none"></p>
       </div>
 
       <div class="sprava">
-        <div>Tuhle stránku navštívilo už <b id="pocitadlo">…</b> lidí.</div>
+        <div>Počet zobrazení: <b id="pocitadlo">…</b></div>
         <button class="odkaz-tlacitko" id="resetToggle" type="button">reset žebříčku</button>
         <form class="reset-form" id="resetForm" autocomplete="off">
           <input type="password" id="resetHeslo" placeholder="heslo" aria-label="Heslo pro reset">
@@ -661,7 +664,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.38</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.39</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -697,14 +700,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou - (c) 2026 KeCl v1.38
+   30 s Verčou - (c) 2026 KeCl v1.39
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.38',
+  APP_VERSION: 'v1.39',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -1321,17 +1324,22 @@ function ulozLokalne(pole) {
   try { localStorage.setItem(KLIC_ZEBRICEK, JSON.stringify(pole)); } catch (e) {}
 }
 
+/* Proč se nepovedlo sáhnout na společný žebříček (prázdné = vše v pořádku).
+   Bez toho vypadala nedostupnost serveru jako „každé zařízení má jiný žebříček". */
+let zebricekChyba = '';
+
 async function vzdalenyZebricek() {
-  if (!CONFIG.zebricekURL) return null;
+  if (!CONFIG.zebricekURL) { zebricekChyba = 'není nastavená adresa'; return null; }
   try {
     const r = await fetch(CONFIG.zebricekURL, { cache: 'no-store' });
-    if (!r.ok) return null;
+    if (!r.ok) { zebricekChyba = 'server odpověděl HTTP ' + r.status; console.warn('Žebříček: HTTP', r.status, CONFIG.zebricekURL); return null; }
+    zebricekChyba = '';
     const d = await r.json();
     if (d === null || d === undefined) return [];          // prázdná databáze
     if (Array.isArray(d)) return d.filter(Boolean);
     if (Array.isArray(d.zaznamy)) return d.zaznamy;
     return Object.values(d).filter(z => z && z.jmeno != null);  // objekt klíč→záznam
-  } catch (e) { return null; }
+  } catch (e) { zebricekChyba = 'server není dostupný'; console.warn('Žebříček:', e); return null; }
 }
 
 async function zapisVzdalene(zaznam) {
@@ -1342,8 +1350,9 @@ async function zapisVzdalene(zaznam) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(zaznam)
     });
+    if (!r.ok) { zebricekChyba = 'zápis na server selhal (HTTP ' + r.status + ')'; console.warn('Žebříček zápis: HTTP', r.status); }
     return r.ok;
-  } catch (e) { return false; }
+  } catch (e) { zebricekChyba = 'zápis na server selhal'; console.warn('Žebříček zápis:', e); return false; }
 }
 
 async function smazVzdalene() {
@@ -1375,6 +1384,16 @@ async function vykresliZebricek(mujZaznam) {
   let data = lokalniZebricek();
   const vzd = await vzdalenyZebricek();
   if (vzd !== null) data = slucZaznamy(vzd, data);
+
+  // Když server nejede, řekneme to nahlas - jinak to vypadá, že se žebříček
+  // „rozchází" mezi počítačem a mobilem (každý vidí jen svoje lokální výsledky).
+  const stav = $('zebricekStav');
+  if (stav) {
+    stav.textContent = zebricekChyba
+      ? '⚠️ Společný žebříček se nepodařilo načíst (' + zebricekChyba + '). Vidíš jen výsledky z tohoto zařízení.'
+      : '';
+    stav.style.display = zebricekChyba ? '' : 'none';
+  }
 
   data.sort((x, y) => (y.body - x.body) || (new Date(x.kdy) - new Date(y.kdy)));
 
