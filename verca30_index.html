@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.29
+   30 s Verčou — (c) 2026 KeCl v1.30
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -111,8 +111,12 @@ h1, h2, h3 { line-height: 1.15; }
 
 /* Mobil: první řádek nadpis + ikony, druhý řádek ovládání a skóre */
 @media (max-width: 760px) {
-  :root { --kviz-plus: 2px; }
-  .app-header h1 { font-size: clamp(1.75rem, 7vw, 2.3rem); }
+  /* v1.30: na mobilu je všechno písmo o ~16 % větší. Skoro celá appka počítá
+     velikosti v rem, takže stačí zvednout kořenovou velikost — poměry zůstanou. */
+  html { font-size: 18.5px; }
+  body { font-size: 1rem; }
+  :root { --kviz-plus: 3px; }
+  .app-header h1 { font-size: clamp(1.9rem, 7.4vw, 2.4rem); }
   .header-ikony { order: 2; }
   .header-actions { order: 3; flex-basis: 100%; justify-content: flex-start; }
   .theme-toggle-label { display: none; }
@@ -640,7 +644,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v1.29</footer>
+<footer class="app-footer">(c) 2026 KeCl v1.30</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -676,14 +680,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou — (c) 2026 KeCl v1.29
+   30 s Verčou — (c) 2026 KeCl v1.30
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v1.29',
+  APP_VERSION: 'v1.30',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -757,8 +761,8 @@ const OTAZKY = [
   { foto:'12.jpg', otazka:'V jaké řece se Verča koupe?', moznosti:['Vrbas (Banja Luka)','Olše (Český Těšín)','Olše (polský Těšín)','Ostravice (Vratimov)'], spravne:'Vrbas (Banja Luka)', komentar:'Koupání pod vrbami je určitě nejlepší v řece Vrbas 🌳' },
   { foto:'13.jpg', otazka:'Na co to sestřičky valí oči?', moznosti:['na vodu z Mariina pramene','na drobný hmyz v lahvích','na Mirdžu, jak „zaběhla za strom"','na krásy lahví Dobré vody'], spravne:'na vodu z Mariina pramene', komentar:'Mattoni už není… 💧' },
   { foto:'14.jpg', otazka:'Do jakých hor si udělaly turistky výlet?', moznosti:['Jeseníky','Beskydy','Krkonoše','Jizerské hory'], spravne:'Jeseníky', komentar:'Není vysílač jako vysílač… 📡' },
-  { foto:'15.jpg', otazka:'Otázka č. 15 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
-  { foto:'16.jpg', otazka:'Otázka č. 16 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
+  { foto:'15.jpg', otazka:'Ze kterého roku je tato fotka ze Střílek?', moznosti:['2013','2014','2015','2016'], spravne:'2014', komentar:'Ano, v roce 2014 – to jsme byli všichni mladí a krásní 😂' },
+  { foto:'16.jpg', otazka:'Tady byla Verunka poprvé u moře – kde to bylo?', moznosti:['Itálie','Bulharsko','Řecko','Chorvatsko'], spravne:'Itálie', komentar:'Sladká Itálie – moříčko, macaroni, pizza – paráda 🌊' },
   { foto:'17.jpg', otazka:'Otázka č. 17 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'18.jpg', otazka:'Otázka č. 18 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
   { foto:'19.jpg', otazka:'Otázka č. 19 – sem napiš znění otázky', moznosti:['Možnost A','Možnost B','Možnost C','Možnost D'], spravne:'Možnost A', komentar:'' },
