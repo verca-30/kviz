@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="assets/ikona-180.png">
 <style>
 /* ============================================================
-   30 s Verčou - (c) 2026 KeCl v2.0
+   30 s Verčou - (c) 2026 KeCl v2.2
    ============================================================ */
 
 /* === BAREVNÁ SCHÉMATA ==================================== */
@@ -664,7 +664,7 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 </main>
 
-<footer class="app-footer">(c) 2026 KeCl v2.0</footer>
+<footer class="app-footer">(c) 2026 KeCl v2.2</footer>
 
 <!-- ===== KARTA S OTÁZKOU ===== -->
 <div class="overlay" id="karta" role="dialog" aria-modal="true" aria-labelledby="kartaOtazka">
@@ -700,14 +700,14 @@ main { flex: 1; width: 100%; padding: clamp(14px, 2.4vw, 28px); }
 
 <script>
 /* ============================================================
-   30 s Verčou - (c) 2026 KeCl v2.0
+   30 s Verčou - (c) 2026 KeCl v2.2
    ============================================================ */
 
 /* ============================================================
    ▼▼▼  NASTAVENÍ  ▼▼▼
    ============================================================ */
 const CONFIG = {
-  APP_VERSION: 'v2.0',
+  APP_VERSION: 'v2.2',
   oslavenkyne: 'Verča',
   // skloňování do hlášek: koho/co, s kým, o kom
   oslavenkyneKoho: 'Verču',
@@ -788,7 +788,7 @@ const OTAZKY = [
   { foto:'18.jpg', otazka:'Který zámek poctily holky svou návštěvou?', moznosti:['Branná','Velké Losiny','Bečov nad Teplou','Frýdlant'], spravne:'Branná', komentar:'3 zámecké paní na zámeckém vinoBranní 🏰' },
   { foto:'19.jpg', otazka:'Romantické pózování na pobřeží moře se událo kde?', moznosti:['Thassos','Rhodos','Mallorca','Korfu'], spravne:'Thassos', komentar:'Kdo se má v těch řeckých ostrovech vyznat 🤪' },
   { foto:'20.jpg', otazka:'V kolika letech podle rodiny Verunka poprvé letěla letadlem?', moznosti:['12','13','15','17'], spravne:'15', rodinna:true, komentar:'Odhady šly od dvanácti do devatenácti, dáváme tedy střed ✈️' },
-  { foto:'21.jpg', otazka:'Jaké první slovo se rodině vybaví, když si vzpomene na Verču?', moznosti:['milá','žabička','úsměvavá','kniha'], spravne:'milá', rodinna:true, komentar:'Sešly se nám samé hezké odpovědi a vyhrála prostě milá 😊' },
+  { foto:'21.jpg', otazka:'Jaké první slovo se rodině vybaví, když si vzpomene na Verču?', moznosti:['milá','žabička','usměvavá','kniha'], spravne:'milá', rodinna:true, komentar:'Sešly se nám samé hezké odpovědi a vyhrála prostě milá 😊' },
   { foto:'22.jpg', otazka:'Na jaké nejoblíbenější Verunčině hračce se rodina nejvíc shodla?', moznosti:['panenka','plyšový krtek','tahací kačer','provázek'], spravne:'panenka', rodinna:true, komentar:'Sice vyhrála panenka, ale provázek jí šlapal na paty 📿' },
   { foto:'23.jpg', otazka:'Kolik knih podle rodiny Verunka doposud přečetla?', moznosti:['cca 100','cca 250','cca 500','přes 600'], spravne:'cca 250', rodinna:true, komentar:'Nejskromnější tipoval padesát, nejodvážnější šest a půl stovky 📚' },
   { foto:'24.jpg', otazka:'Kolik fotek podle rodiny Verča udělá za jednu dovolenou?', moznosti:['cca 100','cca 300','cca 1000','přes 3000'], spravne:'cca 300', rodinna:true, komentar:'Rodina se rozdělila na tábor „pár stovek" a tábor „tisíce" - pravda bude někde uprostřed 📸' },
@@ -1563,6 +1563,23 @@ function zapniKontext() {
   } catch (e) { ac = null; return false; }
 }
 
+/* Po refreshi stránky (obnovená hra) nesmí prohlížeč spustit zvuk sám - autoplay
+   je povolený až po nějaké interakci. Nachystáme tedy start hudby na první
+   klik/dotek/klávesu, ať uživatel nemusí sahat na tlačítko reproduktoru. */
+function hudbaPriPrvniInterakci() {
+  if (!CONFIG.hudba) return;
+  let hotovo = false;
+  const start = () => {
+    if (hotovo) return;
+    hotovo = true;
+    document.removeEventListener('pointerdown', start);
+    document.removeEventListener('keydown', start);
+    if (hudbaZapnuta) spustHudbu();
+  };
+  document.addEventListener('pointerdown', start, { passive: true });
+  document.addEventListener('keydown', start);
+}
+
 /* iOS občas povolí zvuk až při dalším doteku - zkusíme to znovu. */
 function zkusPriDalsimDoteku() {
   document.addEventListener('pointerdown', () => { spustHudbu(); }, { once: true, passive: true });
@@ -1790,6 +1807,7 @@ function obnovHru(s) {
   } else {
     scena('sceneHra');
   }
+  hudbaPriPrvniInterakci();
 }
 
 /* Diagnostika zvuku - otevři appku s ?zvuk=1 na konci adresy. */
